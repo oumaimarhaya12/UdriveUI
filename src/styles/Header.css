@@ -1,0 +1,45 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #fff;
+  border-bottom: none; /* Ensure no bottom border */
+  box-shadow: none; /* Remove shadow */
+  margin: 40px;
+}
+
+.logo img {
+  width: 120px; /* Smaller logo */
+  height: auto; /* Maintain aspect ratio */
+  flex-shrink: 0;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.signup-button {
+  width: 110px;
+  height: 40px;
+  padding: 13px 20px;
+  border-radius: 12px;
+  background: #1a1b34;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.login-button {
+  color: #1a1b34;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+}

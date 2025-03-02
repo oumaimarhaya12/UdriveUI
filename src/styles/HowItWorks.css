@@ -1,0 +1,118 @@
+.how-it-works {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  
+  .how-it-works.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .title {
+    color: #1A1B34;
+    text-align: center;
+    font-family: "Work Sans", sans-serif;
+    font-size: 40px;
+    font-weight: 600;
+    line-height: normal;
+    margin-bottom: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .title .highlight {
+    color: #605FFA;
+  }
+  
+  .content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  .car-image {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+  
+  .car-image img {
+    width: 100%;
+    height: 600px; /* Increased height */
+    object-fit: cover;
+  }
+  
+  .steps {
+    flex: 0 0 45%;
+    max-width: 45%;
+  }
+  
+  .step {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  
+  .step.animate {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .step-number {
+    display: flex;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: #605FFA;
+    color: #FFF;
+    font-family: "Work Sans", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    margin-right: 15px;
+    flex-shrink: 0;
+  }
+  
+  .step-text {
+    flex: 1;
+  }
+  
+  .main-text {
+    color: #000;
+    font-family: "Work Sans", sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: normal;
+    margin-bottom: 10px;
+  }
+  
+  .sub-text {
+    color: #1A1B34;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: normal;
+  }
+  
+  @media (max-width: 768px) {
+    .content {
+      flex-direction: column;
+    }
+  
+    .car-image, .steps {
+      max-width: 100%;
+    }
+  
+    .car-image {
+      margin-bottom: 40px;
+    }
+  }
