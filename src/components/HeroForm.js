@@ -12,6 +12,25 @@ const HeroForm = () => {
   const [minDropoffDate, setMinDropoffDate] = useState("");
   const [dateError, setDateError] = useState("");
 
+
+  
+  const fetchAvailableCars = async () => {
+    if (!pickupDate) return;
+    try {
+      const response = await fetch(`http://localhost:8080/api/Cars?pickupDate=${pickupDate}T${pickupTime}`);
+      console.log('http://localhost:8080/api/Cars?pickupDate=${pickupDate}T${pickupTime}')
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result)
+      } else {
+        console.log("No available cars ")
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données", error);
+    }
+  };
+
+
   useEffect(() => {
     const today = new Date();
     const formattedToday = formatDateForInput(today);
@@ -159,7 +178,7 @@ const HeroForm = () => {
           </div>
 
           {dateError && <div className="error-message">{dateError}</div>}
-          <button type="submit" className="book-button">
+          <button type="submit" className="book-button" onClick={fetchAvailableCars}>
             Book now
           </button>
         </form>

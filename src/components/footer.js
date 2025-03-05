@@ -1,6 +1,7 @@
 // Footer.js
 import "../styles/footer.css";
-import logo from "C:/Users/oumaima rhaya/udrive/src/assets/UdriveLogo.png";
+import logo from '../assets/UdriveLogo.png'; // Import the image
+
 import { FaMapMarkerAlt, FaEnvelope, FaPhone } from "react-icons/fa";
 import { useEffect, useRef } from "react";
 
