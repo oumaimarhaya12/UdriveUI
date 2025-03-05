@@ -1,0 +1,211 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap");
+
+.car-list-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.car-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.car-list-header h2 {
+  color: #1a1b34;
+  font-size: 20px;
+  font-family: "Work Sans", sans-serif;
+  margin: 0;
+}
+
+.car-count {
+  background-color: rgba(96, 95, 250, 0.1);
+  color: #605ffa;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.car-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Exactly 3 cards per row */
+  gap: 20px;
+  justify-content: center;
+}
+
+.car-card {
+  width: 100%; /* Take full width of grid cell */
+  height: 400px; /* Reduced height further since we removed the category */
+  background: #fafafa;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.car-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.car-image {
+  height: 180px; /* Reduced from 250px */
+  overflow: hidden;
+}
+
+.car-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.car-details {
+  padding: 15px; /* Reduced from 20px */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.car-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  color: var(--Default-Black, #000);
+  text-overflow: ellipsis;
+  font-family: "Work Sans", sans-serif;
+  font-size: 18px; /* Reduced from 24px */
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  text-transform: capitalize;
+  margin: 0 0 12px 0; /* Adjusted margin since we removed the category */
+}
+
+.car-price-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px; /* Reduced from 20px */
+}
+
+.price {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  color: #605ffa;
+  text-overflow: ellipsis;
+  font-family: "Work Sans", sans-serif;
+  font-size: 20px; /* Reduced from 24px */
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  text-transform: capitalize;
+}
+
+.price-period {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  color: rgba(0, 0, 0, 0.6);
+  text-overflow: ellipsis;
+  font-family: "Work Sans", sans-serif;
+  font-size: 12px; /* Reduced from 14px */
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.car-specs-container {
+  display: flex;
+  gap: 12px; /* Reduced from 16px */
+  margin-bottom: 15px; /* Reduced from 24px */
+}
+
+.spec-item {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* Reduced from 6px */
+}
+
+.spec-icon {
+  color: #605ffa;
+  width: 16px; /* Added explicit size */
+  height: 16px; /* Added explicit size */
+}
+
+.spec-item span {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  color: rgba(0, 0, 0, 0.6);
+  text-overflow: ellipsis;
+  font-family: "Work Sans", sans-serif;
+  font-size: 13px; /* Reduced from 16px */
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: capitalize;
+}
+
+.view-details-btn {
+  width: 100%;
+  padding: 10px; /* Reduced from 12px */
+  background-color: #605ffa;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-family: "Work Sans", sans-serif;
+  font-size: 14px; /* Reduced from 16px */
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: auto;
+}
+
+.view-details-btn:hover {
+  background-color: #4b4ad7;
+}
+
+.loading,
+.error,
+.no-cars {
+  padding: 30px;
+  text-align: center;
+  color: #666;
+  font-family: "Work Sans", sans-serif;
+}
+
+.error {
+  color: #e53935;
+}
+
+/* Responsive design for tablets */
+@media (max-width: 1200px) {
+  .car-list {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards per row on tablets */
+  }
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+  .car-list {
+    grid-template-columns: 1fr; /* 1 card per row on mobile */
+  }
+
+  .car-card {
+    max-width: 416px;
+    margin: 0 auto;
+  }
+}
+

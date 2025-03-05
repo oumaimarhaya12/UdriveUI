@@ -1,93 +1,118 @@
-import { useState, useEffect } from "react";
-import "../styles/HeroForm.css";
+"use client"
+
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import "../styles/HeroForm.css"
 
 const HeroForm = () => {
-  const [pickupDetails, setPickupDetails] = useState("");
-  const [dropoffDetails, setDropoffDetails] = useState("");
-  const [pickupDate, setPickupDate] = useState("");
-  const [pickupTime, setPickupTime] = useState("");
-  const [dropoffDate, setDropoffDate] = useState("");
-  const [dropoffTime, setDropoffTime] = useState("");
-  const [minPickupDate, setMinPickupDate] = useState("");
-  const [minDropoffDate, setMinDropoffDate] = useState("");
-  const [dateError, setDateError] = useState("");
+  const navigate = useNavigate()
+  const [pickupDetails, setPickupDetails] = useState("")
+  const [dropoffDetails, setDropoffDetails] = useState("")
+  const [pickupDate, setPickupDate] = useState("")
+  const [pickupTime, setPickupTime] = useState("")
+  const [dropoffDate, setDropoffDate] = useState("")
+  const [dropoffTime, setDropoffTime] = useState("")
+  const [minPickupDate, setMinPickupDate] = useState("")
+  const [minDropoffDate, setMinDropoffDate] = useState("")
+  const [dateError, setDateError] = useState("")
 
-
-  
   const fetchAvailableCars = async () => {
-    if (!pickupDate) return;
+    if (!pickupDate) return
     try {
-      const response = await fetch(`http://localhost:8080/api/Cars?pickupDate=${pickupDate}T${pickupTime}`);
-      console.log('http://localhost:8080/api/Cars?pickupDate=${pickupDate}T${pickupTime}')
+      const response = await fetch(`http://localhost:8084/api/Cars?pickupDate=${pickupDate}T${pickupTime}`)
+      console.log(`http://localhost:8084/api/Cars?pickupDate=${pickupDate}T${pickupTime}`)
       if (response.ok) {
-        const result = await response.json();
+        const result = await response.json()
         console.log(result)
       } else {
         console.log("No available cars ")
       }
     } catch (error) {
-      console.error("Erreur lors de la récupération des données", error);
+      console.error("Erreur lors de la récupération des données", error)
     }
-  };
-
+  }
 
   useEffect(() => {
-    const today = new Date();
-    const formattedToday = formatDateForInput(today);
-    setMinPickupDate(formattedToday);
-    setMinDropoffDate(formattedToday);
-  }, []);
+    const today = new Date()
+    const formattedToday = formatDateForInput(today)
+    setMinPickupDate(formattedToday)
+    setMinDropoffDate(formattedToday)
+
+    // Load saved form data from sessionStorage if available
+    const savedFormData = sessionStorage.getItem("bookingFormData")
+    if (savedFormData) {
+      const parsedData = JSON.parse(savedFormData)
+      setPickupDetails(parsedData.pickupDetails || "")
+      setDropoffDetails(parsedData.dropoffDetails || "")
+      setPickupDate(parsedData.pickupDate || "")
+      setPickupTime(parsedData.pickupTime || "")
+      setDropoffDate(parsedData.dropoffDate || "")
+      setDropoffTime(parsedData.dropoffTime || "")
+    }
+  }, [])
 
   const formatDateForInput = (date) => {
-    return date.toISOString().split("T")[0];
-  };
+    return date.toISOString().split("T")[0]
+  }
 
   const handlePickupDateChange = (e) => {
-    const selectedDate = e.target.value;
-    setPickupDate(selectedDate);
-    setMinDropoffDate(selectedDate);
+    const selectedDate = e.target.value
+    setPickupDate(selectedDate)
+    setMinDropoffDate(selectedDate)
 
     if (dropoffDate && dropoffDate < selectedDate) {
-      setDropoffDate("");
-      setDateError("Drop-off date cannot be before pick-up date");
+      setDropoffDate("")
+      setDateError("Drop-off date cannot be before pick-up date")
     } else {
-      setDateError("");
+      setDateError("")
     }
-  };
+  }
 
   const handleDropoffDateChange = (e) => {
-    const selectedDate = e.target.value;
+    const selectedDate = e.target.value
 
     if (pickupDate && selectedDate < pickupDate) {
-      setDateError("Drop-off date cannot be before pick-up date");
-      return;
+      setDateError("Drop-off date cannot be before pick-up date")
+      return
     }
 
-    setDropoffDate(selectedDate);
-    setDateError("");
-  };
+    setDropoffDate(selectedDate)
+    setDateError("")
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!pickupDetails || !dropoffDetails || !pickupDate || !dropoffDate || !pickupTime || !dropoffTime) {
-      setDateError("Please fill in all fields");
-      return;
+      setDateError("Please fill in all fields")
+      return
     }
 
     if (dateError) {
-      return;
+      return
     }
 
-    console.log("Form submitted:", {
+    // Create an object with all the form data
+    const formData = {
       pickupDetails,
       dropoffDetails,
       pickupDate,
       pickupTime,
       dropoffDate,
       dropoffTime,
-    });
-  };
+    }
+
+    // Save the form data to sessionStorage
+    sessionStorage.setItem("bookingFormData", JSON.stringify(formData))
+
+    console.log("Form submitted:", formData)
+
+    // Fetch available cars
+    fetchAvailableCars()
+
+    // Navigate to the car selection page
+    navigate("/car-selection")
+  }
 
   return (
     <div className="hero">
@@ -178,13 +203,14 @@ const HeroForm = () => {
           </div>
 
           {dateError && <div className="error-message">{dateError}</div>}
-          <button type="submit" className="book-button" onClick={fetchAvailableCars}>
+          <button type="submit" className="book-button">
             Book now
           </button>
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default HeroForm;
+export default HeroForm
+

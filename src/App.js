@@ -1,21 +1,15 @@
-import Header from "./components/Header";
-import HeroForm from "./components/HeroForm";
-import WhyUdrive from "./components/WhyUdrive";
-import HowItWorks from "./components/HowItWorks";
-import FactsInNumbers from "./components/FactsInNmb";
-import Footer from "./components/footer";
-import "./App.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import CarSelection from "./pages/CarSelection";
 
 function App() {
   return (
-    <div className="App">
-      <Header />
-      <HeroForm />
-      <WhyUdrive />
-      <HowItWorks />
-      <FactsInNumbers />
-      <Footer />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/car-selection" element={<CarSelection />} />
+      </Routes>
+    </Router>
   );
 }
 

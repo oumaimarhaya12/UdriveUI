@@ -1,0 +1,353 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap");
+
+.promo-banner {
+  background: linear-gradient(135deg, #605ffa 0%, #8584ff 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 25px rgba(96, 95, 250, 0.2);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  position: relative;
+}
+
+.promo-banner.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.promo-content {
+  display: flex;
+  height: 200px;
+  position: relative;
+}
+
+.promo-left {
+  width: 40%;
+  position: relative;
+  overflow: hidden;
+}
+
+.promo-right {
+  width: 60%;
+  padding: 24px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.promo-title {
+  font-family: "Work Sans", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Animated Car */
+.animated-car-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.car-silhouette {
+  position: absolute;
+  width: 180px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px 60px 0 0;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  animation: carBounce 1s infinite alternate ease-in-out;
+}
+
+.car-silhouette:before {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 0 0 10px 10px;
+  bottom: -30px;
+  left: 0;
+}
+
+.car-silhouette:after {
+  content: "";
+  position: absolute;
+  width: 40px;
+  height: 15px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  top: 10px;
+  right: 30px;
+  box-shadow: -60px 0 rgba(255, 255, 255, 0.7);
+}
+
+.wheel {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: #333;
+  border-radius: 50%;
+  bottom: 50px;
+  z-index: 3;
+  border: 4px solid #555;
+  animation: wheelRotate 1s infinite linear;
+}
+
+.wheel:after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: #777;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.wheel-front {
+  right: calc(50% - 100px);
+}
+
+.wheel-back {
+  left: calc(50% - 100px);
+}
+
+.road {
+  position: absolute;
+  width: 100%;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  bottom: 40px;
+  z-index: 1;
+}
+
+.road-line {
+  position: absolute;
+  height: 4px;
+  width: 30px;
+  background: rgba(255, 255, 255, 0.7);
+  top: 8px;
+  animation: roadMove 1s infinite linear;
+}
+
+.road-line:nth-child(1) {
+  left: 10%;
+  animation-delay: -0.3s;
+}
+
+.road-line:nth-child(2) {
+  left: 40%;
+  animation-delay: -0.6s;
+}
+
+.road-line:nth-child(3) {
+  left: 70%;
+  animation-delay: -0.9s;
+}
+
+/* Features Slider */
+.features-slider {
+  position: relative;
+  height: 80px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.feature-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.feature-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: white;
+}
+
+.feature-text h4 {
+  font-family: "Work Sans", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.feature-text p {
+  font-family: "Work Sans", sans-serif;
+  font-size: 14px;
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Slide Indicators */
+.slide-indicators {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.slide-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.slide-dot.active {
+  background: white;
+  transform: scale(1.2);
+}
+
+/* CTA Button */
+.promo-cta {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  color: #605ffa;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-family: "Work Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.promo-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Animations */
+@keyframes carBounce {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    transform: translateX(-50%) translateY(-3px);
+  }
+}
+
+@keyframes wheelRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes roadMove {
+  0% {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .promo-content {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .promo-left,
+  .promo-right {
+    width: 100%;
+  }
+
+  .promo-left {
+    height: 150px;
+  }
+
+  .car-silhouette {
+    width: 150px;
+    height: 40px;
+    bottom: 60px;
+  }
+
+  .car-silhouette:before {
+    width: 150px;
+    height: 25px;
+    bottom: -25px;
+  }
+
+  .wheel {
+    width: 25px;
+    height: 25px;
+    bottom: 45px;
+  }
+
+  .wheel-front {
+    right: calc(50% - 80px);
+  }
+
+  .wheel-back {
+    left: calc(50% - 80px);
+  }
+}
+
+@media (max-width: 768px) {
+  .promo-right {
+    padding: 16px;
+  }
+
+  .promo-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .feature-text h4 {
+    font-size: 16px;
+  }
+
+  .feature-text p {
+    font-size: 12px;
+  }
+}
+

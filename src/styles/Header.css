@@ -2,11 +2,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 20px 40px; /* Increased padding */
   background-color: #fff;
-  border-bottom: none; /* Ensure no bottom border */
-  box-shadow: none; /* Remove shadow */
-  margin: 40px;
+  border-bottom: none; /* No border */
+  box-shadow: none; /* No shadow */
+  width: 100%; /* Ensure it stretches fully */
 }
 
 .logo img {
@@ -42,4 +42,27 @@
   background: none;
   border: none;
   cursor: pointer;
+}
+
+/* ✅ Updated Phone Section */
+.help-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.phone-number {
+  font-weight: bold; /* Make it bold */
+  font-size: 16px;
+  color: #1a1b34;
+}
+
+.phone-icon-circle {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1b34;
+  border-radius: 50%;
 }
