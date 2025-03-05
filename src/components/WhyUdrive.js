@@ -5,6 +5,7 @@ import phoneIcon from "../assets/phone.svg";
 import cashIcon from "../assets/cash.svg"; // Ensure this file exists
 
 const WhyUdrive = () => {
+  
   const sectionRef = useRef(null);
 
   useEffect(() => {
