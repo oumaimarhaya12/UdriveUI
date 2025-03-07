@@ -7,6 +7,8 @@ import FilterHeading from "../components/FilterHeading"
 import FilterSection from "../components/FilterSection"
 import CarList from "../components/CarList"
 import PromoBanner from "../components/promo-banner"
+import CarBrands from "../components/CarBrands"
+import Footer from "../components/footer"
 import "../styles/CarSelection.css"
 
 function CarSelection() {
@@ -25,22 +27,23 @@ function CarSelection() {
         <Header2 />
         <div className="content-container">
           <BookingSummary />
-  
+          <PromoBanner />
           <div className="main-content">
-            <div className="sidebar">
-              <FilterSection onFilterChange={handleFilterChange} />
+            <FilterHeading />
+            <div className="filter-and-cars">
+              <div className="sidebar">
+                <FilterSection onFilterChange={handleFilterChange} />
+              </div>
+              <div className="car-content">
+                <CarList filters={filters} />
+              </div>
             </div>
-  
-            <div className="car-content">
-              {/* Déplacement du PromoBanner au-dessus de FilterHeading */}
-              <PromoBanner />
-              <FilterHeading />
-              <CarList filters={filters} />
-            </div>
+            <CarBrands /> 
           </div>
         </div>
+        <Footer />
       </div>
     )
-  }
-  
-  export default CarSelection
+}
+
+export default CarSelection

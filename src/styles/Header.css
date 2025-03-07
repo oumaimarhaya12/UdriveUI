@@ -2,22 +2,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px; /* Increased padding */
+  padding: 40px 40px; /* Increased left & right padding */
+  margin: 0 20px; /* Added margin to prevent items from touching page edges */
   background-color: #fff;
-  border-bottom: none; /* No border */
-  box-shadow: none; /* No shadow */
-  width: 100%; /* Ensure it stretches fully */
+  border-bottom: none;
+  box-shadow: none;
 }
 
 .logo img {
   width: 120px; /* Smaller logo */
-  height: auto; /* Maintain aspect ratio */
+  height: auto;
   flex-shrink: 0;
 }
 
 .buttons {
   display: flex;
-  gap: 10px;
+  gap: 20px; /* Increased space between buttons */
 }
 
 .signup-button {
@@ -44,15 +44,15 @@
   cursor: pointer;
 }
 
-/* ✅ Updated Phone Section */
 .help-container {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px; /* Increased gap */
+  margin-right: 20px; /* Added right margin */
 }
 
 .phone-number {
-  font-weight: bold; /* Make it bold */
+  font-weight: bold;
   font-size: 16px;
   color: #1a1b34;
 }

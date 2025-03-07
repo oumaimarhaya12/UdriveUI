@@ -2,67 +2,115 @@
     min-height: 100vh;
     background-color: #ffffff;
     font-family: "Work Sans", sans-serif;
-  }
-  
-  .content-container {
+}
+
+.content-container {
     max-width: 1320px;
     margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .main-content {
+    padding: 40px 20px; /* Increased top/bottom padding */
+}
+
+.main-content {
+    margin-top: 60px; /* Increased from 24px */
+}
+
+.filter-and-cars {
     display: flex;
-    gap: 24px;
-    margin-top: 24px;
-  }
-  
-  .sidebar {
-    width: 25%; /* Changed to 25% (1/4) of the page width */
+    gap: 32px; /* Increased from 24px */
+    margin-top: 40px; /* Increased from 24px */
+    margin-bottom: 80px; /* Added bottom margin */
+}
+
+.sidebar {
+    width: 25%;
     max-width: 300px;
     flex-shrink: 0;
-  }
-  
-  .car-content {
+}
+
+.car-content {
     flex: 1;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 1200px) {
+}
+
+/* Add space after BookingSummary */
+.content-container > div:nth-child(1) {
+    margin-bottom: 60px;
+}
+
+/* Add space after PromoBanner */
+.content-container > div:nth-child(2) {
+    margin-bottom: 60px;
+}
+
+/* Add space after FilterHeading */
+.main-content > div:first-child {
+    margin-bottom: 40px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
     .content-container {
-      max-width: 960px;
+        max-width: 960px;
     }
-  }
-  
-  @media (max-width: 992px) {
+}
+
+@media (max-width: 992px) {
     .content-container {
-      max-width: 720px;
+        max-width: 720px;
+        padding: 30px 20px; /* Slightly reduced padding */
     }
-  
+    
     .sidebar {
-      width: 30%; /* Slightly wider on smaller screens */
+        width: 30%;
     }
-  }
-  
-  @media (max-width: 768px) {
+    
+    .filter-and-cars {
+        margin-bottom: 60px; /* Reduced on smaller screens */
+    }
+    
     .main-content {
-      flex-direction: column;
+        margin-top: 50px; /* Slightly reduced */
     }
-  
+}
+
+@media (max-width: 768px) {
+    .filter-and-cars {
+        flex-direction: column;
+        margin-top: 30px;
+        margin-bottom: 50px;
+    }
+
     .sidebar {
-      width: 100%;
-      max-width: none;
-      margin-bottom: 24px;
+        width: 100%;
+        max-width: none;
+        margin-bottom: 40px; /* Increased from 24px */
     }
-  
+
     .content-container {
-      max-width: 540px;
+        max-width: 540px;
+        padding: 25px 15px;
     }
-  }
-  
-  @media (max-width: 576px) {
+    
+    .main-content {
+        margin-top: 40px;
+    }
+    
+    /* Reduce spacing on mobile */
+    .content-container > div:nth-child(1),
+    .content-container > div:nth-child(2) {
+        margin-bottom: 40px;
+    }
+}
+
+@media (max-width: 576px) {
     .content-container {
-      padding: 15px;
+        padding: 20px 15px;
     }
-  }
-  
-  
+    
+    .filter-and-cars {
+        margin-bottom: 40px;
+    }
+    
+    .main-content {
+        margin-top: 30px;
+    }
+}
