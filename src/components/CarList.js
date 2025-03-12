@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Fuel, Calendar, Settings } from "lucide-react"
+import { Fuel, Settings } from "lucide-react"
 import "../styles/CarList.css"
 
 const CarList = ({ filters }) => {
@@ -55,7 +55,7 @@ const CarList = ({ filters }) => {
       // Apply price filter
       if (filters?.priceRange) {
         result = result.filter((car) => {
-          const price = car.pricePerDay || car.price || car.dailyRate || 0
+          const price = car.price || 0
           return price >= filters.priceRange[0] && price <= filters.priceRange[1]
         })
       }
@@ -71,7 +71,7 @@ const CarList = ({ filters }) => {
       // Apply category filter
       if (filters?.categories && filters.categories.length > 0) {
         result = result.filter((car) => {
-          const category = getCarCategory(car).toLowerCase()
+          const category = (car.category || "").toLowerCase()
           return filters.categories.includes(category)
         })
       }
@@ -82,20 +82,11 @@ const CarList = ({ filters }) => {
     applyFilters()
   }, [cars, filters])
 
-  // Function to get car category based on car model or other properties
-  const getCarCategory = (car) => {
-    // This is a placeholder. You should implement logic based on your data
-    const compactCars = ["clio", "polo", "fiesta", "corsa"]
-    const suvCars = ["qashqai", "tucson", "sportage", "rav4"]
-    const luxuryCars = ["mercedes", "bmw", "audi", "lexus"]
-
-    const model = (car.model || "").toLowerCase()
-
-    if (compactCars.some((compact) => model.includes(compact))) return "compact"
-    if (suvCars.some((suv) => model.includes(suv))) return "suv"
-    if (luxuryCars.some((luxury) => model.includes(luxury))) return "luxury"
-
-    return "standard" // Default category
+  const handleViewDetails = (car) => {
+    // Save the selected car to sessionStorage for access on the details page
+    sessionStorage.setItem("selectedCar", JSON.stringify(car))
+    // Navigate using window.location
+    window.location.href = `/car-details/${car.idCar || "default"}`
   }
 
   if (loading) {
@@ -123,26 +114,23 @@ const CarList = ({ filters }) => {
 
       <div className="car-list">
         {filteredCars.map((car, index) => (
-          <div key={car.id || index} className="car-card">
+          <div key={car.idCar || index} className="car-card">
             <div className="car-image">
               <img src={car.imageUrl || "/placeholder.svg?height=180&width=300"} alt={car.model || "Car"} />
             </div>
             <div className="car-details">
               <h3 className="car-name">{car.model || "Model"}</h3>
+              <p className="car-category">{car.category || "Standard"}</p>
 
               <div className="car-price-container">
-                <span className="price">{car.pricePerDay || car.price || car.dailyRate || 0}MAD</span>
+                <span className="price">{car.price || 0}MAD</span>
                 <span className="price-period">per day</span>
               </div>
 
               <div className="car-specs-container">
                 <div className="spec-item">
-                  <Calendar size={16} className="spec-icon" />
-                  <span>{car.year || "2023"}</span>
-                </div>
-                <div className="spec-item">
                   <Settings size={16} className="spec-icon" />
-                  <span>{car.transmission || "Manual"}</span>
+                  <span>{car.transmissionType || "Manual"}</span>
                 </div>
                 <div className="spec-item">
                   <Fuel size={16} className="spec-icon" />
@@ -150,7 +138,9 @@ const CarList = ({ filters }) => {
                 </div>
               </div>
 
-              <button className="view-details-btn">View Details</button>
+              <button className="view-details-btn" onClick={() => handleViewDetails(car)}>
+                View Details
+              </button>
             </div>
           </div>
         ))}
