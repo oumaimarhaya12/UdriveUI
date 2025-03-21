@@ -1,24 +1,37 @@
-import React from 'react';
-import '../styles/Header.css'; // Corrected path
-import UdriveLogo from '../assets/UdriveLogo.png'; // Import the image
+"use client"
+import { useNavigate } from "react-router-dom"
+import "../styles/HeaderNew.css" 
+import UdriveLogo from "../assets/UdriveLogo.png"
 
 const Header = () => {
+  const navigate = useNavigate()
+
+  const handleLoginClick = () => {
+    navigate("/login")
+  }
+
+  const handleSignupClick = () => {
+    navigate("/signup")
+  }
+
   return (
-    <header className="header">
-      <div className="logo">
-        <img
-          src={UdriveLogo} // Use the imported image
-          alt="Udrive Logo"
-          width="157"
-          height="33.734"
-        />
+    <header className="udrive-header">
+      <div className="udrive-logo">
+        <img src={UdriveLogo || "/placeholder.svg"} alt="Udrive Logo" width="157" height="33.734" />
       </div>
-      <div className="buttons">
-        <button className="signup-button">Sign Up</button>
-        <button className="login-button">Log In</button>
+      <div className="udrive-buttons">
+        <button
+          className="udrive-signup-button"
+          onClick={handleSignupClick}
+        >
+          Sign Up
+        </button>
+        <button className="udrive-login-button" onClick={handleLoginClick}>
+          Log In
+        </button>
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

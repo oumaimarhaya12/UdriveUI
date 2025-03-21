@@ -2,67 +2,91 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 40px 40px; /* Increased left & right padding */
-  margin: 0 20px; /* Added margin to prevent items from touching page edges */
-  background-color: #fff;
-  border-bottom: none;
-  box-shadow: none;
+  padding: 1rem 2rem;
+  background-color: transparent;
+  position: relative;
+  z-index: 10;
 }
 
-.logo img {
-  width: 120px; /* Smaller logo */
-  height: auto;
-  flex-shrink: 0;
+.logo {
+  cursor: pointer;
 }
 
 .buttons {
   display: flex;
-  gap: 20px; /* Increased space between buttons */
+  gap: 1rem;
+  align-items: center;
 }
 
+/* Bouton Sign Up avec largeur réduite */
 .signup-button {
-  width: 110px;
+  display: flex;
+  width: auto; /* Changé de 130px à auto */
   height: 40px;
-  padding: 13px 20px;
+  padding: 8px 20px; /* Padding réduit */
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
   border-radius: 12px;
-  background: #1a1b34;
-  color: #fff;
+  background: #1A1B34;
+  border: none;
+  color: #FFF;
   font-family: 'Inter', sans-serif;
   font-size: 16px;
+  font-style: normal;
   font-weight: 600;
-  border: none;
+  line-height: normal;
   cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap; /* Empêche le texte de passer à la ligne */
 }
 
+.signup-button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* Bouton Log In avec largeur ajustée */
 .login-button {
-  color: #1a1b34;
+  background-color: transparent;
+  border: none;
+  color: #1A1B34;
+  text-align: center;
   font-family: 'Inter', sans-serif;
   font-size: 18px;
+  font-style: normal;
   font-weight: 600;
-  background: none;
-  border: none;
+  line-height: normal;
   cursor: pointer;
+  transition: color 0.3s ease;
+  padding: 8px 15px; /* Ajout d'un padding pour un meilleur espacement */
+  white-space: nowrap; /* Empêche le texte de passer à la ligne */
 }
 
-.help-container {
-  display: flex;
-  align-items: center;
-  gap: 15px; /* Increased gap */
-  margin-right: 20px; /* Added right margin */
+.login-button:hover {
+  color: #4b4ad7;
 }
 
-.phone-number {
-  font-weight: bold;
-  font-size: 16px;
-  color: #1a1b34;
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+  }
 }
 
-.phone-icon-circle {
-  width: 35px;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #1a1b34;
-  border-radius: 50%;
+@media (max-width: 480px) {
+  .buttons {
+    gap: 0.5rem;
+  }
+  
+  .signup-button {
+    height: 36px;
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+  
+  .login-button {
+    font-size: 16px;
+    padding: 8px 10px;
+  }
 }

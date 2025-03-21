@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap');
+
+.login-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #121212 0%, #1e1e2d 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 2rem;
+}
+
+/* Moved much further down and reduced opacity */
+.pneu-background {
+  position: absolute;
+  bottom: -120px; /* Negative value to move it much lower */
+  left: 0;
+  width: 100%;
+  height: auto;
+  opacity: 0.9; /* Reduced opacity from 0.4 to 0.25 */
+  z-index: 2;
+  object-fit: cover;
+}
+
+.login-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  z-index: 10;
+  position: relative;
+}
+
+.login-page-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+}
+
+.shape-1 {
+  width: 500px;
+  height: 500px;
+  background: rgba(75, 74, 215, 0.15);
+  top: -200px;
+  right: -100px;
+}
+
+.shape-2 {
+  width: 600px;
+  height: 600px;
+  background: rgba(75, 74, 215, 0.1);
+  bottom: -300px;
+  left: -200px;
+}
+
+.shape-3 {
+  width: 300px;
+  height: 300px;
+  background: rgba(75, 74, 215, 0.2);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .pneu-background {
+    bottom: -60px;
+  }
+}
+
+@media (max-width: 576px) {
+  .login-page {
+    padding: 1rem;
+  }
+  
+  .pneu-background {
+    bottom: -40px;
+  }
+}

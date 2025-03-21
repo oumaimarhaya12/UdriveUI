@@ -1,149 +1,157 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap");
+
 .payment-details-container {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-    padding: 35px;
-    margin-top: 30px;
-    margin-bottom: 40px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    font-family: "Work Sans", sans-serif;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  padding: 35px;
+  margin-top: 30px;
+  margin-bottom: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  font-family: "Work Sans", sans-serif;
+}
+
+.payment-section,
+.cancellation-section {
+  background: linear-gradient(145deg, #f9f9f9, #ffffff);
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(96, 95, 250, 0.1);
+
+  /* Animation properties */
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.payment-section.animate,
+.cancellation-section.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.payment-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+/* Fixed icon styles */
+.payment-icon {
+  width: 36px;
+  height: 36px;
+  color: #605ffa;
+  transition: transform 0.3s ease;
+}
+
+.payment-section:hover .payment-icon,
+.cancellation-section:hover .payment-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.payment-header h3 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1b34;
+  margin: 0;
+}
+
+.payment-content {
+  color: #1a1b34;
+}
+
+.payment-text {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: transform 0.3s ease;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.contact-item:hover {
+  transform: translateX(5px);
+  background-color: rgba(96, 95, 250, 0.05);
+}
+
+/* Fixed icon styles */
+.contact-icon {
+  width: 32px;
+  height: 32px;
+  color: #605ffa;
+  transition: transform 0.3s ease;
+}
+
+.contact-item:hover .contact-icon {
+  transform: scale(1.1);
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-label {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 4px;
+}
+
+.contact-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: #605ffa;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.contact-value:hover {
+  color: #4b4ad7;
+  text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 992px) {
+  .payment-details-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
-  
+
+  /* Adjust animation delay for stacked layout */
   .payment-section,
   .cancellation-section {
-    background: linear-gradient(145deg, #f9f9f9, #ffffff);
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(96, 95, 250, 0.1);
-  
-    /* Animation properties */
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transition-delay: 0.1s;
   }
-  
-  .payment-section.animate,
-  .cancellation-section.animate {
-    opacity: 1;
-    transform: translateY(0);
+}
+
+@media (max-width: 576px) {
+  .payment-details-container {
+    padding: 20px;
   }
-  
-  .payment-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
+
+  .payment-section,
+  .cancellation-section {
+    padding: 20px;
   }
-  
-  .payment-icon {
-    color: #605ffa;
-    background-color: rgba(96, 95, 250, 0.1);
-    padding: 8px;
-    border-radius: 50%;
-    transition: transform 0.3s ease;
-  }
-  
-  .payment-section:hover .payment-icon,
-  .cancellation-section:hover .payment-icon {
-    transform: scale(1.1) rotate(5deg);
-  }
-  
-  .payment-header h3 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #1a1b34;
-    margin: 0;
-  }
-  
-  .payment-content {
-    color: #1a1b34;
-  }
-  
+
   .payment-text {
-    font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 20px;
+    font-size: 15px;
   }
-  
-  .contact-details {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 20px;
-  }
-  
-  .contact-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: transform 0.3s ease;
-  }
-  
-  .contact-item:hover {
-    transform: translateX(5px);
-  }
-  
-  .contact-icon {
-    color: #605ffa;
-    background-color: rgba(96, 95, 250, 0.1);
-    padding: 8px;
-    border-radius: 50%;
-  }
-  
-  .contact-info {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .contact-label {
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.6);
-    margin-bottom: 4px;
-  }
-  
-  .contact-value {
-    font-size: 16px;
-    font-weight: 500;
-    color: #605ffa;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  
-  .contact-value:hover {
-    color: #4b4ad7;
-    text-decoration: underline;
-  }
-  
-  /* Responsive design */
-  @media (max-width: 992px) {
-    .payment-details-container {
-      grid-template-columns: 1fr;
-      gap: 20px;
-    }
-  
-    /* Adjust animation delay for stacked layout */
-    .payment-section,
-    .cancellation-section {
-      transition-delay: 0.1s;
-    }
-  }
-  
-  @media (max-width: 576px) {
-    .payment-details-container {
-      padding: 20px;
-    }
-  
-    .payment-section,
-    .cancellation-section {
-      padding: 20px;
-    }
-  
-    .payment-text {
-      font-size: 15px;
-    }
-  }
-  
-  
+}

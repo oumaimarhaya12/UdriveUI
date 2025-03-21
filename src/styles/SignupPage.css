@@ -1,0 +1,39 @@
+.signup-container {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #121212 0%, #1e1e2d 100%);
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .signup-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+    background-image: url("../assets/pneuPurple.svg");
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: 100% auto;
+    opacity: 0.85; /* Reduced opacity of the background */
+  }
+  
+  @media (max-width: 768px) {
+    .signup-content {
+      padding: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .signup-content {
+      padding: 1rem;
+    }
+  }
+  
+  

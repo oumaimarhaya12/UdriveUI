@@ -1,0 +1,339 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap');
+
+.login-form-container {
+  width: 100%;
+  max-width: 650px;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.login-form-wrapper {
+  background: rgba(30, 30, 45, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center all content */
+}
+
+.form-header {
+  margin-bottom: 2.5rem;
+  text-align: center;
+  width: 100%;
+}
+
+.form-header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  color: white;
+  font-family: 'Work Sans', sans-serif;
+  line-height: 1.2;
+}
+
+.form-header p {
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Work Sans', sans-serif;
+  font-size: 1.2rem;
+}
+
+/* Form layout and organization */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  width: 100%;
+}
+
+/* Common width for all interactive elements - exactly the same width */
+.form-group,
+.login-button,
+.divider,
+.social-button,
+.error-message,
+.create-account {
+  width: 350px; /* Fixed width for all elements */
+  max-width: 90%; /* For responsive behavior */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  color: white;
+  font-weight: 500;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 0.95rem;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 14px;
+  padding-right: 40px;
+  font-size: 15px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-family: 'Work Sans', sans-serif;
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.input-wrapper input:focus {
+  border-color: #4b4ad7;
+  background-color: rgba(255, 255, 255, 0.1);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(75, 74, 215, 0.2);
+}
+
+.input-wrapper input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.input-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-icon.clickable {
+  cursor: pointer;
+}
+
+.input-icon.clickable:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.password-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.forgot-password {
+  color: #4b4ad7;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color 0.2s;
+  font-family: 'Work Sans', sans-serif;
+  display: block;
+  text-align: right;
+  margin-top: 0.5rem;
+}
+
+.forgot-password:hover {
+  color: #6e6dff;
+  text-decoration: underline;
+}
+
+/* Button styling */
+.login-button {
+  background-color: #4b4ad7;
+  color: white;
+  font-weight: 600;
+  padding: 0.9rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 1rem;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+}
+
+.login-button:hover {
+  background-color: #3e3db3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(75, 74, 215, 0.3);
+}
+
+.login-button:active {
+  transform: translateY(0);
+}
+
+.login-button:disabled {
+  background-color: #3e3db3;
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.7;
+}
+
+.login-button.loading {
+  color: transparent;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+  position: absolute;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Divider styling */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.divider span {
+  padding: 0 10px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
+  font-family: 'Work Sans', sans-serif;
+}
+
+/* Social login section */
+.social-login {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.social-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.social-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.social-button.google {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Create account section */
+.create-account {
+  text-align: center;
+  margin-top: 2rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Work Sans', sans-serif;
+  font-size: 1rem;
+}
+
+.create-account-link {
+  color: #4b4ad7;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.create-account-link:hover {
+  color: #6e6dff;
+  text-decoration: underline;
+}
+
+/* Error message */
+.error-message {
+  background-color: rgba(229, 57, 53, 0.1);
+  border-left: 3px solid #e53935;
+  color: #e53935;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-family: 'Work Sans', sans-serif;
+  margin-bottom: 1rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .login-form-wrapper {
+    padding: 2.5rem;
+  }
+  
+  .form-header h1 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form-wrapper {
+    padding: 2rem;
+  }
+  
+  .form-header h1 {
+    font-size: 2rem;
+  }
+  
+  .form-group,
+  .login-button,
+  .divider,
+  .social-button,
+  .error-message,
+  .create-account {
+    max-width: 100%;
+  }
+}

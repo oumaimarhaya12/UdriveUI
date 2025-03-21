@@ -150,4 +150,3 @@ const CarList = ({ filters }) => {
 }
 
 export default CarList
-

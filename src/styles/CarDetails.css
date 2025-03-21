@@ -7,16 +7,16 @@
 }
 
 .content-container {
-  max-width: 1400px; /* Increased from 1200px */
+  max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
 }
 
 .car-details-container {
   background-color: white;
-  border-radius: 16px; /* Increased from 12px */
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
-  padding: 40px; /* Increased from 24px */
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  padding: 40px;
   margin-bottom: 30px;
   width: 100%;
 }
@@ -24,43 +24,48 @@
 .car-details-content {
   display: flex;
   flex-direction: column;
-  gap: 40px; /* Increased from 24px */
+  gap: 40px;
 }
 
 .car-details-main {
   display: grid;
-  grid-template-columns: 1.2fr 1fr; /* Adjusted ratio */
-  gap: 50px; /* Increased from 30px */
+  grid-template-columns: 1.2fr 1fr;
+  gap: 50px;
 }
 
 .car-details-image {
-  border-radius: 16px; /* Increased from 12px */
+  border-radius: 16px;
   overflow: hidden;
-  height: 450px; /* Increased from 400px */
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* Added shadow */
+  height: 450px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
 .car-details-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.car-details-image img:hover {
+  transform: scale(1.03);
 }
 
 .car-details-info {
   display: flex;
   flex-direction: column;
-  gap: 25px; /* Increased from 20px */
+  gap: 25px;
 }
 
 .car-details-name {
-  font-size: 36px; /* Increased from 32px */
+  font-size: 36px;
   font-weight: 700;
   color: #1a1b34;
   margin: 0;
 }
 
 .car-details-category {
-  font-size: 20px; /* Increased from 18px */
+  font-size: 20px;
   color: rgba(0, 0, 0, 0.6);
   text-transform: capitalize;
   margin-top: -10px;
@@ -74,56 +79,63 @@
 }
 
 .car-details-price .price {
-  font-size: 32px; /* Increased from 28px */
+  font-size: 32px;
   font-weight: 700;
   color: #605ffa;
 }
 
 .car-details-price .price-period {
-  font-size: 18px; /* Increased from 16px */
+  font-size: 18px;
   color: rgba(0, 0, 0, 0.6);
 }
 
 .car-attributes-section {
   background-color: #f9f9f9;
-  border-radius: 16px; /* Increased from 12px */
-  padding: 30px; /* Increased from 20px */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Added shadow */
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 .car-attributes-section h3 {
-  font-size: 22px; /* Increased from 20px */
+  font-size: 22px;
   font-weight: 600;
   color: #1a1b34;
   margin-top: 0;
-  margin-bottom: 20px; /* Increased from 16px */
+  margin-bottom: 20px;
 }
 
 .car-attributes-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px; /* Increased from 16px */
+  gap: 20px;
 }
 
 .attribute-item {
   display: flex;
   align-items: center;
-  gap: 15px; /* Increased from 12px */
-  padding: 10px; /* Added padding */
-  border-radius: 10px; /* Added border radius */
-  transition: background-color 0.2s;
+  gap: 15px;
+  padding: 10px;
+  border-radius: 10px;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
 .attribute-item:hover {
-  background-color: rgba(96, 95, 250, 0.05); /* Added hover effect */
+  background-color: rgba(96, 95, 250, 0.05);
+  transform: translateX(3px);
 }
 
+/* Fixed icon styles */
 .attribute-icon {
-  color: #605ffa;
-  background-color: rgba(96, 95, 250, 0.1);
-  padding: 10px; /* Increased from 8px */
-  border-radius: 50%;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
+  color: #605ffa;
+  transition: transform 0.3s ease;
+}
+
+.attribute-item:hover .attribute-icon {
+  transform: scale(1.1);
 }
 
 .attribute-info {
@@ -132,83 +144,83 @@
 }
 
 .attribute-label {
-  font-size: 15px; /* Increased from 14px */
+  font-size: 15px;
   color: rgba(0, 0, 0, 0.6);
 }
 
 .attribute-value {
-  font-size: 18px; /* Increased from 16px */
+  font-size: 18px;
   font-weight: 500;
   color: #1a1b34;
 }
 
 .booking-summary-box {
-  background: linear-gradient(145deg, #f9f9f9, #ffffff); /* Added gradient */
-  border-radius: 16px; /* Increased from 12px */
-  padding: 35px; /* Increased from 24px */
+  background: linear-gradient(145deg, #f9f9f9, #ffffff);
+  border-radius: 16px;
+  padding: 35px;
   margin-top: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Enhanced shadow */
-  border: 1px solid rgba(96, 95, 250, 0.1); /* Added subtle border */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(96, 95, 250, 0.1);
 }
 
 .booking-summary-box h3 {
-  font-size: 24px; /* Increased from 20px */
+  font-size: 24px;
   font-weight: 600;
   color: #1a1b34;
   margin-top: 0;
-  margin-bottom: 25px; /* Increased from 20px */
-  text-align: center; /* Centered the heading */
+  margin-bottom: 25px;
+  text-align: center;
 }
 
 .price-summary {
   background-color: white;
-  border-radius: 12px; /* Increased from 8px */
-  padding: 25px; /* Increased from 16px */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Enhanced shadow */
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 .price-row {
   display: flex;
   justify-content: space-between;
-  padding: 12px 0; /* Increased from 8px */
-  font-size: 17px; /* Increased from 15px */
+  padding: 12px 0;
+  font-size: 17px;
   color: #1a1b34;
 }
 
 .price-row.total {
-  border-top: 2px solid rgba(96, 95, 250, 0.1); /* Made border thicker and colored */
-  margin-top: 12px; /* Increased from 8px */
-  padding-top: 20px; /* Increased from 16px */
+  border-top: 2px solid rgba(96, 95, 250, 0.1);
+  margin-top: 12px;
+  padding-top: 20px;
   font-weight: 600;
-  font-size: 22px; /* Increased from 18px */
+  font-size: 22px;
   color: #605ffa;
 }
 
 .confirm-btn {
-  margin-top: 25px; /* Increased from 20px */
-  padding: 16px 20px; /* Increased from 14px */
+  margin-top: 25px;
+  padding: 16px 20px;
   background-color: #605ffa;
   color: white;
   border: none;
-  border-radius: 12px; /* Increased from 8px */
+  border-radius: 12px;
   font-family: "Work Sans", sans-serif;
-  font-size: 18px; /* Increased from 16px */
+  font-size: 18px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease; /* Enhanced transition */
+  transition: all 0.3s ease;
   width: 100%;
-  box-shadow: 0 4px 15px rgba(96, 95, 250, 0.3); /* Added shadow */
-  letter-spacing: 0.5px; /* Added letter spacing */
+  box-shadow: 0 2px 8px rgba(96, 95, 250, 0.2);
+  letter-spacing: 0.5px;
 }
 
 .confirm-btn:hover {
   background-color: #4b4ad7;
-  transform: translateY(-2px); /* Added subtle lift effect */
-  box-shadow: 0 6px 20px rgba(96, 95, 250, 0.4); /* Enhanced shadow on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(96, 95, 250, 0.3);
 }
 
 .confirm-btn:active {
-  transform: translateY(1px); /* Added press effect */
+  transform: translateY(1px);
 }
 
 /* Loading and error states */
@@ -281,4 +293,3 @@
     font-size: 18px;
   }
 }
-

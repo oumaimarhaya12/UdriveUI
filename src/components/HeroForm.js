@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import "../styles/HeroForm.css"
 
@@ -15,6 +15,25 @@ const HeroForm = () => {
   const [minPickupDate, setMinPickupDate] = useState("")
   const [minDropoffDate, setMinDropoffDate] = useState("")
   const [dateError, setDateError] = useState("")
+  const [showPickupSuggestions, setShowPickupSuggestions] = useState(false)
+  const [showDropoffSuggestions, setShowDropoffSuggestions] = useState(false)
+  
+  const pickupInputRef = useRef(null)
+  const dropoffInputRef = useRef(null)
+  const pickupSuggestionsRef = useRef(null)
+  const dropoffSuggestionsRef = useRef(null)
+
+  // Popular locations in Agadir
+  const popularLocations = [
+    "Agadir Al Massira Airport",
+    "Agadir Beach",
+    "Souk El Had d'Agadir",
+    "Marina d'Agadir",
+    "Agadir City Center",
+    "Agadir Bus Station",
+    "Taghazout Beach",
+    "Tamraght Beach"
+  ]
 
   const fetchAvailableCars = async () => {
     if (!pickupDate) return
@@ -33,10 +52,14 @@ const HeroForm = () => {
   }
 
   useEffect(() => {
+    // Set tomorrow as the minimum pickup date (can't select today)
     const today = new Date()
-    const formattedToday = formatDateForInput(today)
-    setMinPickupDate(formattedToday)
-    setMinDropoffDate(formattedToday)
+    const tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    
+    const formattedTomorrow = formatDateForInput(tomorrow)
+    setMinPickupDate(formattedTomorrow)
+    setMinDropoffDate(formattedTomorrow)
 
     // Load saved form data from sessionStorage if available
     const savedFormData = sessionStorage.getItem("bookingFormData")
@@ -49,6 +72,24 @@ const HeroForm = () => {
       setDropoffDate(parsedData.dropoffDate || "")
       setDropoffTime(parsedData.dropoffTime || "")
     }
+
+    // Add click outside listener to close dropdowns
+    const handleClickOutside = (event) => {
+      if (pickupSuggestionsRef.current && !pickupSuggestionsRef.current.contains(event.target) && 
+          pickupInputRef.current && !pickupInputRef.current.contains(event.target)) {
+        setShowPickupSuggestions(false)
+      }
+      
+      if (dropoffSuggestionsRef.current && !dropoffSuggestionsRef.current.contains(event.target) && 
+          dropoffInputRef.current && !dropoffInputRef.current.contains(event.target)) {
+        setShowDropoffSuggestions(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
   }, [])
 
   const formatDateForInput = (date) => {
@@ -58,11 +99,18 @@ const HeroForm = () => {
   const handlePickupDateChange = (e) => {
     const selectedDate = e.target.value
     setPickupDate(selectedDate)
-    setMinDropoffDate(selectedDate)
+    
+    // Update minimum dropoff date to be at least one day after pickup
+    const pickupDateObj = new Date(selectedDate)
+    const nextDay = new Date(pickupDateObj)
+    nextDay.setDate(pickupDateObj.getDate() + 1)
+    const formattedNextDay = formatDateForInput(nextDay)
+    setMinDropoffDate(formattedNextDay)
 
-    if (dropoffDate && dropoffDate < selectedDate) {
+    // Clear dropoff date if it's now invalid
+    if (dropoffDate && new Date(dropoffDate) <= pickupDateObj) {
       setDropoffDate("")
-      setDateError("Drop-off date cannot be before pick-up date")
+      setDateError("Drop-off date must be at least one day after pick-up date")
     } else {
       setDateError("")
     }
@@ -70,14 +118,40 @@ const HeroForm = () => {
 
   const handleDropoffDateChange = (e) => {
     const selectedDate = e.target.value
-
-    if (pickupDate && selectedDate < pickupDate) {
-      setDateError("Drop-off date cannot be before pick-up date")
+    const pickupDateObj = new Date(pickupDate)
+    const dropoffDateObj = new Date(selectedDate)
+    
+    // Check if dropoff date is at least one day after pickup
+    const timeDiff = dropoffDateObj.getTime() - pickupDateObj.getTime()
+    const dayDiff = timeDiff / (1000 * 3600 * 24)
+    
+    if (dayDiff < 1) {
+      setDateError("Drop-off date must be at least one day after pick-up date")
       return
     }
 
     setDropoffDate(selectedDate)
     setDateError("")
+  }
+
+  const handlePickupLocationChange = (e) => {
+    setPickupDetails(e.target.value)
+    setShowPickupSuggestions(true)
+  }
+
+  const handleDropoffLocationChange = (e) => {
+    setDropoffDetails(e.target.value)
+    setShowDropoffSuggestions(true)
+  }
+
+  const handleSelectPickupLocation = (location) => {
+    setPickupDetails(location)
+    setShowPickupSuggestions(false)
+  }
+
+  const handleSelectDropoffLocation = (location) => {
+    setDropoffDetails(location)
+    setShowDropoffSuggestions(false)
   }
 
   const handleSubmit = (e) => {
@@ -89,6 +163,17 @@ const HeroForm = () => {
     }
 
     if (dateError) {
+      return
+    }
+
+    // Validate that pickup and dropoff dates are not the same day
+    const pickupDateObj = new Date(pickupDate)
+    const dropoffDateObj = new Date(dropoffDate)
+    const timeDiff = dropoffDateObj.getTime() - pickupDateObj.getTime()
+    const dayDiff = timeDiff / (1000 * 3600 * 24)
+    
+    if (dayDiff < 1) {
+      setDateError("Drop-off date must be at least one day after pick-up date")
       return
     }
 
@@ -114,6 +199,15 @@ const HeroForm = () => {
     navigate("/car-selection")
   }
 
+  // Filter locations based on input
+  const filteredPickupLocations = popularLocations.filter(location => 
+    location.toLowerCase().includes(pickupDetails.toLowerCase())
+  )
+  
+  const filteredDropoffLocations = popularLocations.filter(location => 
+    location.toLowerCase().includes(dropoffDetails.toLowerCase())
+  )
+
   return (
     <div className="hero">
       <div className="hero-content">
@@ -126,26 +220,60 @@ const HeroForm = () => {
         <form className="form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="input-label">Pick-up Location</label>
-            <input
-              type="text"
-              placeholder="Enter pick-up Address in Agadir"
-              className="form-input"
-              value={pickupDetails}
-              onChange={(e) => setPickupDetails(e.target.value)}
-              required
-            />
+            <div className="location-input-container">
+              <input
+                type="text"
+                placeholder="Enter pick-up Address in Agadir"
+                className="form-input"
+                value={pickupDetails}
+                onChange={handlePickupLocationChange}
+                onFocus={() => setShowPickupSuggestions(true)}
+                ref={pickupInputRef}
+                required
+              />
+              {showPickupSuggestions && filteredPickupLocations.length > 0 && (
+                <div className="location-suggestions" ref={pickupSuggestionsRef}>
+                  {filteredPickupLocations.map((location, index) => (
+                    <div 
+                      key={index} 
+                      className="location-suggestion-item"
+                      onClick={() => handleSelectPickupLocation(location)}
+                    >
+                      {location}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="form-group">
             <label className="input-label">Drop-off Location</label>
-            <input
-              type="text"
-              placeholder="Enter drop-off Address in Agadir"
-              className="form-input"
-              value={dropoffDetails}
-              onChange={(e) => setDropoffDetails(e.target.value)}
-              required
-            />
+            <div className="location-input-container">
+              <input
+                type="text"
+                placeholder="Enter drop-off Address in Agadir"
+                className="form-input"
+                value={dropoffDetails}
+                onChange={handleDropoffLocationChange}
+                onFocus={() => setShowDropoffSuggestions(true)}
+                ref={dropoffInputRef}
+                required
+              />
+              {showDropoffSuggestions && filteredDropoffLocations.length > 0 && (
+                <div className="location-suggestions" ref={dropoffSuggestionsRef}>
+                  {filteredDropoffLocations.map((location, index) => (
+                    <div 
+                      key={index} 
+                      className="location-suggestion-item"
+                      onClick={() => handleSelectDropoffLocation(location)}
+                    >
+                      {location}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="form-group">

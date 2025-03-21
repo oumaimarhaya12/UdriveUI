@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap");
+
 .hero {
   border-radius: 40px;
   background: #605ffa url("../assets/pneuBlack.svg") no-repeat center / cover;
@@ -152,6 +154,44 @@
   margin-top: -10px;
 }
 
+/* New styles for location dropdown */
+.location-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.location-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.location-suggestion-item {
+  padding: 12px 14px;
+  font-family: "Work Sans", sans-serif;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.location-suggestion-item:hover {
+  background-color: rgba(96, 95, 250, 0.1);
+  color: #605ffa;
+}
+
+.location-suggestion-item:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1200px) {
   .hero {
@@ -213,5 +253,8 @@
   .time-input {
     width: 100%;
   }
+  
+  .location-suggestions {
+    max-height: 150px;
+  }
 }
-

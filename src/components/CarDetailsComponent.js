@@ -1,8 +1,20 @@
-"use client"
+'use client'
 
 import { useState, useEffect } from "react"
-import { Fuel, Settings, Users, Wind, Tag, Car, DollarSign } from "lucide-react"
+import { Fuel, Settings, Users, Wind, Tag, Car, DollarSign } from 'lucide-react'
 import "../styles/CarDetails.css"
+
+// SVG gradient definition
+const IconGradient = () => (
+  <svg width="0" height="0" style={{ position: 'absolute' }}>
+    <defs>
+      <linearGradient id="icon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#605ffa" />
+        <stop offset="100%" stopColor="#9747FF" />
+      </linearGradient>
+    </defs>
+  </svg>
+)
 
 const CarDetailsComponent = ({ carId }) => {
   const [car, setCar] = useState(null)
@@ -80,118 +92,119 @@ const CarDetailsComponent = ({ carId }) => {
 
   const days = calculateDays()
 
+  // Custom icon style for gradient
+  const iconStyle = { stroke: 'url(#icon-gradient)' };
+
   return (
-    <div className="car-details-container">
-      <div className="car-details-content">
-        <div className="car-details-main">
-          <div className="car-details-image">
-            <img src={car.imageUrl || "/placeholder.svg?height=400&width=600"} alt={car.model} />
-          </div>
+    <div className="car-details-page">
+      <IconGradient />
+      <div className="content-container">
+        <div className="car-details-container">
+          <div className="car-details-content">
+            <div className="car-details-main">
+              <div className="car-details-image">
+                <img src={car.imageUrl || "/placeholder.svg?height=400&width=600"} alt={car.model} />
+              </div>
 
-          <div className="car-details-info">
-            <h1 className="car-details-name">{car.model}</h1>
-            <div className="car-details-category">{car.category}</div>
+              <div className="car-details-info">
+                <div>
+                  <h1 className="car-details-name">{car.model}</h1>
+                  <div className="car-details-category">{car.category}</div>
 
-            <div className="car-details-price">
-              <span className="price">{car.price}MAD</span>
-              <span className="price-period">per day</span>
-            </div>
-
-            <div className="car-attributes-section">
-              <h3>Car Details</h3>
-              <div className="car-attributes-grid">
-                <div className="attribute-item">
-                  <Car size={20} className="attribute-icon" />
-                  <div className="attribute-info">
-                    <div className="attribute-label">Model</div>
-                    <div className="attribute-value">{car.model}</div>
+                  <div className="car-details-price">
+                    <span className="price">{car.price}MAD</span>
+                    <span className="price-period">per day</span>
                   </div>
                 </div>
 
-                <div className="attribute-item">
-                  <Tag size={20} className="attribute-icon" />
-                  <div className="attribute-info">
-                    <div className="attribute-label">ID</div>
-                    <div className="attribute-value">{car.idCar}</div>
-                  </div>
-                </div>
+                <div className="car-attributes-section">
+                  <h3>Car Details</h3>
+                  <div className="car-attributes-grid">
+                    <div className="attribute-item">
+                      <Car className="attribute-icon" style={iconStyle} />
+                      <div className="attribute-info">
+                        <div className="attribute-label">Model</div>
+                        <div className="attribute-value">{car.model}</div>
+                      </div>
+                    </div>
 
-                <div className="attribute-item">
-                  <DollarSign size={20} className="attribute-icon" />
-                  <div className="attribute-info">
-                    <div className="attribute-label">Price</div>
-                    <div className="attribute-value">{car.price} MAD/day</div>
-                  </div>
-                </div>
+                    <div className="attribute-item">
+                      <DollarSign className="attribute-icon" style={iconStyle} />
+                      <div className="attribute-info">
+                        <div className="attribute-label">Price</div>
+                        <div className="attribute-value">{car.price} MAD/day</div>
+                      </div>
+                    </div>
 
-                <div className="attribute-item">
-                  <Settings size={20} className="attribute-icon" />
-                  <div className="attribute-info">
-                    <div className="attribute-label">Transmission</div>
-                    <div className="attribute-value">{car.transmissionType}</div>
-                  </div>
-                </div>
+                    <div className="attribute-item">
+                      <Settings className="attribute-icon" style={iconStyle} />
+                      <div className="attribute-info">
+                        <div className="attribute-label">Transmission</div>
+                        <div className="attribute-value">{car.transmissionType}</div>
+                      </div>
+                    </div>
 
-                <div className="attribute-item">
-                  <Fuel size={20} className="attribute-icon" />
-                  <div className="attribute-info">
-                    <div className="attribute-label">Fuel Type</div>
-                    <div className="attribute-value">{car.fuelType}</div>
-                  </div>
-                </div>
+                    <div className="attribute-item">
+                      <Fuel className="attribute-icon" style={iconStyle} />
+                      <div className="attribute-info">
+                        <div className="attribute-label">Fuel Type</div>
+                        <div className="attribute-value">{car.fuelType}</div>
+                      </div>
+                    </div>
 
-                <div className="attribute-item">
-                  <Users size={20} className="attribute-icon" />
-                  <div className="attribute-info">
-                    <div className="attribute-label">Seats</div>
-                    <div className="attribute-value">{car.seatsNumber} seats</div>
-                  </div>
-                </div>
+                    <div className="attribute-item">
+                      <Users className="attribute-icon" style={iconStyle} />
+                      <div className="attribute-info">
+                        <div className="attribute-label">Seats</div>
+                        <div className="attribute-value">{car.seatsNumber} seats</div>
+                      </div>
+                    </div>
 
-                <div className="attribute-item">
-                  <Wind size={20} className="attribute-icon" />
-                  <div className="attribute-info">
-                    <div className="attribute-label">Air Conditioning</div>
-                    <div className="attribute-value">{car.airConditioner ? "Yes" : "No"}</div>
-                  </div>
-                </div>
+                    <div className="attribute-item">
+                      <Wind className="attribute-icon" style={iconStyle} />
+                      <div className="attribute-info">
+                        <div className="attribute-label">Air Conditioning</div>
+                        <div className="attribute-value">{car.airConditioner ? "Yes" : "No"}</div>
+                      </div>
+                    </div>
 
-                <div className="attribute-item">
-                  <Tag size={20} className="attribute-icon" />
-                  <div className="attribute-info">
-                    <div className="attribute-label">Category</div>
-                    <div className="attribute-value">{car.category}</div>
+                    <div className="attribute-item">
+                      <Tag className="attribute-icon" style={iconStyle} />
+                      <div className="attribute-info">
+                        <div className="attribute-label">Category</div>
+                        <div className="attribute-value">{car.category}</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            {bookingData && (
+              <div className="booking-summary-box">
+                <h3>Price Summary</h3>
+                <div className="price-summary">
+                  <div className="price-row">
+                    <span>Daily Rate:</span>
+                    <span>{car.price} MAD</span>
+                  </div>
+                  <div className="price-row">
+                    <span>Number of Days:</span>
+                    <span>{days} days</span>
+                  </div>
+                  <div className="price-row total">
+                    <span>Total Price:</span>
+                    <span>{calculateTotalPrice()} MAD</span>
+                  </div>
+                </div>
+                <button className="confirm-btn">Confirm Booking</button>
+              </div>
+            )}
           </div>
         </div>
-
-        {bookingData && (
-          <div className="booking-summary-box">
-            <h3>Price Summary</h3>
-            <div className="price-summary">
-              <div className="price-row">
-                <span>Daily Rate:</span>
-                <span>{car.price} MAD</span>
-              </div>
-              <div className="price-row">
-                <span>Number of Days:</span>
-                <span>{days} days</span>
-              </div>
-              <div className="price-row total">
-                <span>Total Price:</span>
-                <span>{calculateTotalPrice()} MAD</span>
-              </div>
-            </div>
-            <button className="confirm-btn">Confirm</button>
-          </div>
-        )}
       </div>
     </div>
   )
 }
 
 export default CarDetailsComponent
-
