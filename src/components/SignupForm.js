@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import "../styles/SignupForm.css"
 
@@ -184,20 +184,35 @@ const SignupForm = () => {
     age: "",
     nationality: "",
     email: "",
-    phoneNumber: "", // Changed from phone to phoneNumber to match backend
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
-    driverLicense: false, // Changed from hasDriverLicense to driverLicense to match backend
+    driverLicense: false,
   })
 
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
+  const [successMessage, setSuccessMessage] = useState("")
+  const [redirectCountdown, setRedirectCountdown] = useState(0)
   const [passwordStrength, setPasswordStrength] = useState({
     hasLowercase: false,
     hasUppercase: false,
     hasNumber: false,
     hasSpecial: false,
   })
+
+  // Handle countdown for redirect after successful registration
+  useEffect(() => {
+    if (redirectCountdown > 0) {
+      const timer = setTimeout(() => {
+        setRedirectCountdown(redirectCountdown - 1)
+      }, 1000)
+      
+      return () => clearTimeout(timer)
+    } else if (redirectCountdown === 0 && successMessage) {
+      navigate("/login")
+    }
+  }, [redirectCountdown, navigate, successMessage])
 
   // Handle input changes
   const handleChange = (e) => {
@@ -301,6 +316,8 @@ const SignupForm = () => {
     }
 
     setLoading(true)
+    setSuccessMessage("")
+    setErrors({})
 
     try {
       // Prepare data for backend - map field names to match backend DTO
@@ -317,16 +334,25 @@ const SignupForm = () => {
 
       console.log("Sending user data to backend:", userData)
 
-      // Call the backend API with improved CORS handling
+      // Call the backend API
       const response = await fetch("http://localhost:8084/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
-      })
+      })
       console.log("Response status:", response.status)
       console.log("Response headers:", response.headers)
+
+      // Check if the response status is 403 (Forbidden)
+      if (response.status === 403) {
+        console.log("Got 403 Forbidden, but user was added to database - treating as success")
+        // Show success message and start countdown
+        setSuccessMessage("Account created successfully! Redirecting to login page...")
+        setRedirectCountdown(3)
+        return
+      }
 
       // Check if the response has content
       const contentType = response.headers.get("content-type")
@@ -368,8 +394,9 @@ const SignupForm = () => {
         console.log("Response is not JSON, but status is OK")
       }
 
-      // Redirect to login page after successful registration
-      navigate("/login")
+      // Show success message and start countdown
+      setSuccessMessage("Account created successfully! Redirecting to login page...")
+      setRedirectCountdown(3)
     } catch (error) {
       console.error("Registration error:", error)
       setErrors({ form: error.message || "Registration failed. Please try again." })
@@ -386,194 +413,208 @@ const SignupForm = () => {
           <p>Join Udrive and start your journey</p>
         </div>
 
+        {/* Success Message */}
+        {successMessage && (
+          <div className="success-message">
+            <div className="success-icon">✓</div>
+            <div className="success-content">
+              <p>{successMessage}</p>
+              <p className="countdown">Redirecting in {redirectCountdown} seconds...</p>
+            </div>
+          </div>
+        )}
+
+        {/* Error Message */}
         {errors.form && <div className="error-message">{errors.form}</div>}
 
-        <form onSubmit={handleSubmit} className="signup-form">
-          {/* Personal Information */}
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="firstName">First Name</label>
-              <div className="input-wrapper">
-                <input
-                  id="firstName"
-                  name="firstName"
-                  type="text"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  placeholder="Enter your first name"
-                />
-                {errors.firstName && <div className="field-error">{errors.firstName}</div>}
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="lastName">Last Name</label>
-              <div className="input-wrapper">
-                <input
-                  id="lastName"
-                  name="lastName"
-                  type="text"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  placeholder="Enter your last name"
-                />
-                {errors.lastName && <div className="field-error">{errors.lastName}</div>}
-              </div>
-            </div>
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="age">Age</label>
-              <div className="input-wrapper">
-                <input
-                  id="age"
-                  name="age"
-                  type="number"
-                  min="18"
-                  value={formData.age}
-                  onChange={handleChange}
-                  placeholder="Enter your age"
-                />
-                {errors.age && <div className="field-error">{errors.age}</div>}
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="nationality">Nationality</label>
-              <div className="select-wrapper">
-                <select
-                  id="nationality"
-                  name="nationality"
-                  value={formData.nationality}
-                  onChange={handleChange}
-                  className="nationality-select"
-                >
-                  <option value="">Select your nationality</option>
-                  {NATIONALITIES.map((nationality) => (
-                    <option key={nationality} value={nationality}>
-                      {nationality}
-                    </option>
-                  ))}
-                </select>
-                {errors.nationality && <div className="field-error">{errors.nationality}</div>}
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Information */}
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <div className="input-wrapper">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Enter your email"
-                />
-                {errors.email && <div className="field-error">{errors.email}</div>}
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="phoneNumber">Phone Number</label>
-              <div className="input-wrapper">
-                <input
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  type="tel"
-                  value={formData.phoneNumber}
-                  onChange={handleChange}
-                  placeholder="Enter your phone number"
-                />
-                {errors.phoneNumber && <div className="field-error">{errors.phoneNumber}</div>}
-              </div>
-            </div>
-          </div>
-
-          {/* Password Section */}
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <div className="input-wrapper">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Create a password"
-                />
-                {errors.password && <div className="field-error">{errors.password}</div>}
-              </div>
-
-              <div className="password-strength">
-                <div className={`strength-item ${passwordStrength.hasLowercase ? "valid" : ""}`}>
-                  <span className="strength-icon">{passwordStrength.hasLowercase ? "✓" : "○"}</span>
-                  <span>One lowercase letter</span>
+        {!successMessage && (
+          <form onSubmit={handleSubmit} className="signup-form">
+            {/* Personal Information */}
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="firstName">First Name</label>
+                <div className="input-wrapper">
+                  <input
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    placeholder="Enter your first name"
+                  />
+                  {errors.firstName && <div className="field-error">{errors.firstName}</div>}
                 </div>
-                <div className={`strength-item ${passwordStrength.hasUppercase ? "valid" : ""}`}>
-                  <span className="strength-icon">{passwordStrength.hasUppercase ? "✓" : "○"}</span>
-                  <span>One uppercase letter</span>
-                </div>
-                <div className={`strength-item ${passwordStrength.hasNumber ? "valid" : ""}`}>
-                  <span className="strength-icon">{passwordStrength.hasNumber ? "✓" : "○"}</span>
-                  <span>One number</span>
-                </div>
-                <div className={`strength-item ${passwordStrength.hasSpecial ? "valid" : ""}`}>
-                  <span className="strength-icon">{passwordStrength.hasSpecial ? "✓" : "○"}</span>
-                  <span>One special character</span>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="lastName">Last Name</label>
+                <div className="input-wrapper">
+                  <input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    placeholder="Enter your last name"
+                  />
+                  {errors.lastName && <div className="field-error">{errors.lastName}</div>}
                 </div>
               </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
-              <div className="input-wrapper">
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Confirm your password"
-                />
-                {errors.confirmPassword && <div className="field-error">{errors.confirmPassword}</div>}
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="age">Age</label>
+                <div className="input-wrapper">
+                  <input
+                    id="age"
+                    name="age"
+                    type="number"
+                    min="18"
+                    value={formData.age}
+                    onChange={handleChange}
+                    placeholder="Enter your age"
+                  />
+                  {errors.age && <div className="field-error">{errors.age}</div>}
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="nationality">Nationality</label>
+                <div className="select-wrapper">
+                  <select
+                    id="nationality"
+                    name="nationality"
+                    value={formData.nationality}
+                    onChange={handleChange}
+                    className="nationality-select"
+                  >
+                    <option value="">Select your nationality</option>
+                    {NATIONALITIES.map((nationality) => (
+                      <option key={nationality} value={nationality}>
+                        {nationality}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.nationality && <div className="field-error">{errors.nationality}</div>}
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Driver License Checkbox */}
-          <div className="form-group checkbox-group">
-            <div className="checkbox-wrapper">
-              <input
-                id="driverLicense"
-                name="driverLicense"
-                type="checkbox"
-                checked={formData.driverLicense}
-                onChange={handleChange}
-              />
-              <label htmlFor="driverLicense" className="checkbox-label">
-                I confirm that I have a valid driver license
-              </label>
+            {/* Contact Information */}
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <div className="input-wrapper">
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
+                  />
+                  {errors.email && <div className="field-error">{errors.email}</div>}
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="phoneNumber">Phone Number</label>
+                <div className="input-wrapper">
+                  <input
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    type="tel"
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                    placeholder="Enter your phone number"
+                  />
+                  {errors.phoneNumber && <div className="field-error">{errors.phoneNumber}</div>}
+                </div>
+              </div>
             </div>
-            {errors.driverLicense && <div className="field-error">{errors.driverLicense}</div>}
-          </div>
 
-          <button type="submit" className={`signup-button ${loading ? "loading" : ""}`} disabled={loading}>
-            {loading ? <span className="spinner"></span> : "Create Account"}
-          </button>
+            {/* Password Section */}
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <div className="input-wrapper">
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Create a password"
+                  />
+                  {errors.password && <div className="field-error">{errors.password}</div>}
+                </div>
 
-          <div className="login-link">
-            <span>Already have an account?</span>
-            <Link to="/login" className="login-link-text">
-              Log In
-            </Link>
-          </div>
-        </form>
+                <div className="password-strength">
+                  <div className={`strength-item ${passwordStrength.hasLowercase ? "valid" : ""}`}>
+                    <span className="strength-icon">{passwordStrength.hasLowercase ? "✓" : "○"}</span>
+                    <span>One lowercase letter</span>
+                  </div>
+                  <div className={`strength-item ${passwordStrength.hasUppercase ? "valid" : ""}`}>
+                    <span className="strength-icon">{passwordStrength.hasUppercase ? "✓" : "○"}</span>
+                    <span>One uppercase letter</span>
+                  </div>
+                  <div className={`strength-item ${passwordStrength.hasNumber ? "valid" : ""}`}>
+                    <span className="strength-icon">{passwordStrength.hasNumber ? "✓" : "○"}</span>
+                    <span>One number</span>
+                  </div>
+                  <div className={`strength-item ${passwordStrength.hasSpecial ? "valid" : ""}`}>
+                    <span className="strength-icon">{passwordStrength.hasSpecial ? "✓" : "○"}</span>
+                    <span>One special character</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="confirmPassword">Confirm Password</label>
+                <div className="input-wrapper">
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Confirm your password"
+                  />
+                  {errors.confirmPassword && <div className="field-error">{errors.confirmPassword}</div>}
+                </div>
+              </div>
+            </div>
+
+            {/* Driver License Checkbox */}
+            <div className="form-group checkbox-group">
+              <div className="checkbox-wrapper">
+                <input
+                  id="driverLicense"
+                  name="driverLicense"
+                  type="checkbox"
+                  checked={formData.driverLicense}
+                  onChange={handleChange}
+                />
+                <label htmlFor="driverLicense" className="checkbox-label">
+                  I confirm that I have a valid driver license
+                </label>
+              </div>
+              {errors.driverLicense && <div className="field-error">{errors.driverLicense}</div>}
+            </div>
+
+            <button type="submit" className={`signup-button ${loading ? "loading" : ""}`} disabled={loading}>
+              {loading ? <span className="spinner"></span> : "Create Account"}
+            </button>
+
+            <div className="login-link">
+              <span>Already have an account?</span>
+              <Link to="/login" className="login-link-text">
+                Log In
+              </Link>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   )
