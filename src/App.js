@@ -5,6 +5,7 @@ import CarDetailsPage from "./pages/CarDetails";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
 import Dashboard from "./pages/Dashboard"; 
+import AuthTest from './pages/AuthTest';
 import { AuthProvider } from "./contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/car-details/:carId" element={<CarDetailsPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/auth-test" element={<AuthTest />} />
           <Route 
             path="/dashboard" 
             element={

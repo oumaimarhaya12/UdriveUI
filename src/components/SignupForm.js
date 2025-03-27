@@ -184,10 +184,10 @@ const SignupForm = () => {
     age: "",
     nationality: "",
     email: "",
-    phone: "",
+    phoneNumber: "", // Changed from phone to phoneNumber to match backend
     password: "",
     confirmPassword: "",
-    hasDriverLicense: false,
+    driverLicense: false, // Changed from hasDriverLicense to driverLicense to match backend
   })
 
   const [loading, setLoading] = useState(false)
@@ -262,8 +262,8 @@ const SignupForm = () => {
     }
 
     // Phone validation
-    if (!formData.phone) {
-      newErrors.phone = "Phone number is required"
+    if (!formData.phoneNumber) {
+      newErrors.phoneNumber = "Phone number is required"
     }
 
     // Password validation
@@ -284,8 +284,8 @@ const SignupForm = () => {
     }
 
     // Driver license validation
-    if (!formData.hasDriverLicense) {
-      newErrors.hasDriverLicense = "You must have a driver license to register"
+    if (!formData.driverLicense) {
+      newErrors.driverLicense = "You must have a driver license to register"
     }
 
     setErrors(newErrors)
@@ -303,14 +303,76 @@ const SignupForm = () => {
     setLoading(true)
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-      console.log("Registration data:", formData)
+      // Prepare data for backend - map field names to match backend DTO
+      const userData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        age: Number.parseInt(formData.age),
+        email: formData.email,
+        password: formData.password,
+        phoneNumber: formData.phoneNumber,
+        nationality: formData.nationality,
+        driverLicense: formData.driverLicense,
+      }
+
+      console.log("Sending user data to backend:", userData)
+
+      // Call the backend API with improved CORS handling
+      const response = await fetch("http://localhost:8084/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      })
+      console.log("Response status:", response.status)
+      console.log("Response headers:", response.headers)
+
+      // Check if the response has content
+      const contentType = response.headers.get("content-type")
+      console.log("Content type:", contentType)
+
+      if (!response.ok) {
+        // Try to parse error response if it exists
+        let errorMessage = "Registration failed"
+
+        if (contentType && contentType.includes("application/json")) {
+          const errorText = await response.text()
+          console.log("Error response text:", errorText)
+
+          if (errorText && errorText.trim() !== "") {
+            try {
+              const errorData = JSON.parse(errorText)
+              errorMessage = errorData.message || errorMessage
+            } catch (parseError) {
+              console.error("Error parsing error response:", parseError)
+            }
+          }
+        }
+
+        throw new Error(errorMessage)
+      }
+
+      // Check if there's a response body to parse
+      if (contentType && contentType.includes("application/json")) {
+        const responseText = await response.text()
+        console.log("Response text:", responseText)
+
+        if (responseText && responseText.trim() !== "") {
+          const createdUser = JSON.parse(responseText)
+          console.log("User created successfully:", createdUser)
+        } else {
+          console.log("Empty response body but status OK")
+        }
+      } else {
+        console.log("Response is not JSON, but status is OK")
+      }
 
       // Redirect to login page after successful registration
       navigate("/login")
     } catch (error) {
-      setErrors({ form: "Registration failed. Please try again." })
+      console.error("Registration error:", error)
+      setErrors({ form: error.message || "Registration failed. Please try again." })
     } finally {
       setLoading(false)
     }
@@ -417,17 +479,17 @@ const SignupForm = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="phone">Phone Number</label>
+              <label htmlFor="phoneNumber">Phone Number</label>
               <div className="input-wrapper">
                 <input
-                  id="phone"
-                  name="phone"
+                  id="phoneNumber"
+                  name="phoneNumber"
                   type="tel"
-                  value={formData.phone}
+                  value={formData.phoneNumber}
                   onChange={handleChange}
                   placeholder="Enter your phone number"
                 />
-                {errors.phone && <div className="field-error">{errors.phone}</div>}
+                {errors.phoneNumber && <div className="field-error">{errors.phoneNumber}</div>}
               </div>
             </div>
           </div>
@@ -488,17 +550,17 @@ const SignupForm = () => {
           <div className="form-group checkbox-group">
             <div className="checkbox-wrapper">
               <input
-                id="hasDriverLicense"
-                name="hasDriverLicense"
+                id="driverLicense"
+                name="driverLicense"
                 type="checkbox"
-                checked={formData.hasDriverLicense}
+                checked={formData.driverLicense}
                 onChange={handleChange}
               />
-              <label htmlFor="hasDriverLicense" className="checkbox-label">
+              <label htmlFor="driverLicense" className="checkbox-label">
                 I confirm that I have a valid driver license
               </label>
             </div>
-            {errors.hasDriverLicense && <div className="field-error">{errors.hasDriverLicense}</div>}
+            {errors.driverLicense && <div className="field-error">{errors.driverLicense}</div>}
           </div>
 
           <button type="submit" className={`signup-button ${loading ? "loading" : ""}`} disabled={loading}>
@@ -518,4 +580,3 @@ const SignupForm = () => {
 }
 
 export default SignupForm
-
