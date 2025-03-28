@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap");
 
 .login-form-container {
   width: 100%;
@@ -29,13 +29,13 @@
   font-weight: 700;
   margin-bottom: 0.8rem;
   color: white;
-  font-family: 'Work Sans', sans-serif;
+  font-family: "Work Sans", sans-serif;
   line-height: 1.2;
 }
 
 .form-header p {
   color: rgba(255, 255, 255, 0.7);
-  font-family: 'Work Sans', sans-serif;
+  font-family: "Work Sans", sans-serif;
   font-size: 1.2rem;
 }
 
@@ -54,7 +54,8 @@
 .divider,
 .social-button,
 .error-message,
-.create-account {
+.create-account,
+.success-message {
   width: 350px; /* Fixed width for all elements */
   max-width: 90%; /* For responsive behavior */
   box-sizing: border-box; /* Include padding in width calculation */
@@ -69,7 +70,7 @@
 .form-group label {
   color: white;
   font-weight: 500;
-  font-family: 'Work Sans', sans-serif;
+  font-family: "Work Sans", sans-serif;
   font-size: 0.95rem;
 }
 
@@ -87,7 +88,7 @@
   color: white;
   border-radius: 8px;
   transition: all 0.3s ease;
-  font-family: 'Work Sans', sans-serif;
+  font-family: "Work Sans", sans-serif;
   box-sizing: border-box; /* Include padding in width calculation */
 }
 
@@ -132,7 +133,7 @@
   font-size: 0.875rem;
   text-decoration: none;
   transition: color 0.2s;
-  font-family: 'Work Sans', sans-serif;
+  font-family: "Work Sans", sans-serif;
   display: block;
   text-align: right;
   margin-top: 0.5rem;
@@ -154,7 +155,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 0.5rem;
-  font-family: 'Work Sans', sans-serif;
+  font-family: "Work Sans", sans-serif;
   font-size: 1rem;
   position: relative;
   overflow: hidden;
@@ -211,7 +212,7 @@
 
 .divider::before,
 .divider::after {
-  content: '';
+  content: "";
   flex: 1;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -220,7 +221,7 @@
   padding: 0 10px;
   color: rgba(255, 255, 255, 0.5);
   font-size: 0.8rem;
-  font-family: 'Work Sans', sans-serif;
+  font-family: "Work Sans", sans-serif;
 }
 
 /* Social login section */
@@ -247,7 +248,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(255, 255, 255, 0.05);
   color: white;
-  font-family: 'Work Sans', sans-serif;
+  font-family: "Work Sans", sans-serif;
   font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -267,7 +268,7 @@
   text-align: center;
   margin-top: 2rem;
   color: rgba(255, 255, 255, 0.7);
-  font-family: 'Work Sans', sans-serif;
+  font-family: "Work Sans", sans-serif;
   font-size: 1rem;
 }
 
@@ -292,9 +293,126 @@
   padding: 12px;
   border-radius: 4px;
   font-size: 0.9rem;
-  font-family: 'Work Sans', sans-serif;
+  font-family: "Work Sans", sans-serif;
   margin-bottom: 1rem;
   animation: fadeIn 0.3s ease-out;
+  width: 350px;
+  max-width: 90%;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+/* Success Message Styles - Dark Theme */
+.success-message {
+  display: flex;
+  align-items: flex-start;
+  background-color: transparent !important; /* Force transparent background */
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 24px;
+  width: 350px;
+  max-width: 90%;
+  box-sizing: border-box;
+  animation: fadeInScale 0.4s ease-out;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(75, 74, 215, 0.2); /* Purple border */
+}
+
+.success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #4b4ad7 !important; /* Force purple background */
+  color: white;
+  margin-right: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(75, 74, 215, 0.3);
+}
+
+.success-content {
+  flex-grow: 1;
+}
+
+.success-title {
+  margin: 0 0 6px 0;
+  padding: 0;
+  font-family: "Work Sans", sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: white;
+}
+
+.success-text {
+  margin: 0 0 12px 0;
+  padding: 0;
+  font-family: "Work Sans", sans-serif;
+  font-weight: 400;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+}
+
+.countdown-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.countdown-timer {
+  position: relative;
+  width: 30px;
+  height: 30px;
+}
+
+.countdown-number {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  font-family: "Work Sans", sans-serif;
+}
+
+.countdown-svg {
+  transform: rotate(-90deg);
+}
+
+.countdown-circle {
+  fill: none;
+  stroke: #4b4ad7;
+  stroke-width: 2;
+  stroke-dasharray: 88; /* 2 * PI * r, where r = 14 */
+  stroke-dashoffset: 0;
+  animation: countdown-animation 1s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes countdown-animation {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 88;
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes fadeIn {
@@ -313,7 +431,7 @@
   .login-form-wrapper {
     padding: 2.5rem;
   }
-  
+
   .form-header h1 {
     font-size: 2.5rem;
   }
@@ -323,17 +441,19 @@
   .login-form-wrapper {
     padding: 2rem;
   }
-  
+
   .form-header h1 {
     font-size: 2rem;
   }
-  
+
   .form-group,
   .login-button,
   .divider,
   .social-button,
   .error-message,
-  .create-account {
+  .create-account,
+  .success-message {
     max-width: 100%;
   }
 }
+

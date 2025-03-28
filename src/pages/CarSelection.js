@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Header2 from "../components/Header2"
+import Header from "../components/Header"
 import BookingSummary from "../components/BookingSummary"
 import FilterHeading from "../components/FilterHeading"
 import FilterSection from "../components/FilterSection"
@@ -24,7 +24,7 @@ function CarSelection() {
   
     return (
       <div className="car-selection-page">
-        <Header2 />
+        <Header />
         <div className="content-container">
           <BookingSummary />
           <PromoBanner />

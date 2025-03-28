@@ -1,4 +1,4 @@
-.header {
+.udrive-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -8,85 +8,358 @@
   z-index: 10;
 }
 
-.logo {
+.udrive-logo {
   cursor: pointer;
 }
 
-.buttons {
+.udrive-buttons {
   display: flex;
   gap: 1rem;
   align-items: center;
 }
 
 /* Bouton Sign Up avec largeur réduite */
-.signup-button {
+.udrive-signup-button {
   display: flex;
-  width: auto; /* Changé de 130px à auto */
-  height: 40px;
-  padding: 8px 20px; /* Padding réduit */
+  width: auto;
+  height: 44px;
+  padding: 10px 24px;
   justify-content: center;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
   border-radius: 12px;
-  background: #1A1B34;
+  background: #1a1b34;
   border: none;
-  color: #FFF;
-  font-family: 'Inter', sans-serif;
+  color: #fff;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
   cursor: pointer;
   transition: all 0.3s ease;
-  white-space: nowrap; /* Empêche le texte de passer à la ligne */
+  white-space: nowrap;
 }
 
-.signup-button:hover {
+.udrive-signup-button:hover {
   opacity: 0.9;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 27, 52, 0.15);
 }
 
 /* Bouton Log In avec largeur ajustée */
-.login-button {
+.udrive-login-button {
   background-color: transparent;
   border: none;
-  color: #1A1B34;
+  color: #1a1b34;
   text-align: center;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
   cursor: pointer;
   transition: color 0.3s ease;
-  padding: 8px 15px; /* Ajout d'un padding pour un meilleur espacement */
-  white-space: nowrap; /* Empêche le texte de passer à la ligne */
+  padding: 10px 18px;
+  white-space: nowrap;
 }
 
-.login-button:hover {
+.udrive-login-button:hover {
   color: #4b4ad7;
 }
 
+/* Profile Dropdown Styles - Enhanced and Larger */
+.profile-dropdown {
+  position: relative;
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 9999px;
+  background-color: rgba(26, 27, 52, 0.05);
+  transition: all 0.25s ease;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.profile-button:hover {
+  background-color: rgba(26, 27, 52, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.profile-avatar-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.avatar-placeholder {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: #4b4ad7;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  box-shadow: 0 2px 5px rgba(75, 74, 215, 0.2);
+}
+
+.user-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1b34;
+  font-family: "Inter", sans-serif;
+}
+
+.chevron {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+  color: #6b7280;
+}
+
+.chevron.open {
+  transform: rotate(180deg);
+  color: #4b4ad7;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: 320px;
+  background-color: white;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  z-index: 50;
+  animation: fadeIn 0.25s ease-out;
+  font-family: "Inter", sans-serif;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.user-info {
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: linear-gradient(to bottom, rgba(75, 74, 215, 0.05), rgba(75, 74, 215, 0));
+}
+
+.user-avatar-large {
+  flex-shrink: 0;
+}
+
+.user-avatar-large img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-placeholder-large {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #4b4ad7;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 24px;
+  font-family: "Inter", sans-serif;
+  box-shadow: 0 2px 10px rgba(75, 74, 215, 0.3);
+}
+
+.user-details {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.user-full-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1b34;
+  margin: 0 0 6px 0;
+}
+
+.user-email {
+  font-size: 14px;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.user-role {
+  font-size: 13px;
+  background-color: #4b4ad7;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin-left: 8px;
+  font-weight: 500;
+  box-shadow: 0 2px 5px rgba(75, 74, 215, 0.2);
+}
+
+.user-role-badge {
+  font-size: 12px;
+  background-color: #4b4ad7;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-top: 8px;
+  font-weight: 500;
+  box-shadow: 0 2px 5px rgba(75, 74, 215, 0.2);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  color: #374151;
+  font-size: 16px;
+  transition: all 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-weight: 500;
+}
+
+.menu-item:hover {
+  background-color: rgba(75, 74, 215, 0.05);
+}
+
+.menu-item:active {
+  background-color: rgba(75, 74, 215, 0.1);
+}
+
+.menu-icon {
+  width: 20px;
+  height: 20px;
+  color: #6b7280;
+  transition: transform 0.2s ease;
+}
+
+.menu-item:hover .menu-icon {
+  transform: translateX(2px);
+  color: #4b4ad7;
+}
+
+.menu-item.dashboard {
+  color: #4b4ad7;
+}
+
+.menu-item.dashboard .menu-icon {
+  color: #4b4ad7;
+}
+
+.menu-item.dashboard:hover {
+  background-color: rgba(75, 74, 215, 0.08);
+}
+
+.menu-item.logout {
+  color: #e11d48;
+}
+
+.menu-item.logout .menu-icon {
+  color: #e11d48;
+}
+
+.menu-item.logout:hover {
+  background-color: rgba(225, 29, 72, 0.05);
+}
+
+.menu-item.logout:hover .menu-icon {
+  transform: translateX(2px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @media (max-width: 768px) {
-  .header {
+  .udrive-header {
     padding: 1rem;
+  }
+
+  .dropdown-menu {
+    width: 300px;
   }
 }
 
 @media (max-width: 480px) {
-  .buttons {
+  .udrive-buttons {
     gap: 0.5rem;
   }
-  
-  .signup-button {
-    height: 36px;
-    padding: 8px 15px;
+
+  .udrive-signup-button {
+    height: 40px;
+    padding: 8px 16px;
     font-size: 14px;
   }
-  
-  .login-button {
+
+  .udrive-login-button {
     font-size: 16px;
-    padding: 8px 10px;
+    padding: 8px 12px;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .dropdown-menu {
+    width: 280px;
+  }
+
+  .user-info {
+    padding: 20px;
+  }
+
+  .avatar-placeholder-large {
+    width: 56px;
+    height: 56px;
+    font-size: 22px;
+  }
+
+  .user-avatar-large img {
+    width: 56px;
+    height: 56px;
   }
 }
+

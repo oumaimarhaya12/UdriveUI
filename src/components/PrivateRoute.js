@@ -1,31 +1,31 @@
-// components/PrivateRoute.js
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+"use client"
 
-const PrivateRoute = ({ children }) => {
-  const { currentUser, loading } = useAuth();
+import { Navigate } from "react-router-dom"
+import { useAuth } from "../contexts/AuthContext"
 
-  // Si l'authentification est en cours de chargement, afficher un indicateur de chargement
-  if (loading) {
-    return (
-      <div style={{ 
-        display: "flex", 
-        justifyContent: "center", 
-        alignItems: "center", 
-        height: "100vh" 
-      }}>
-        <div className="spinner"></div>
-      </div>
-    );
+const PrivateRoute = ({ children, adminOnly = false }) => {
+  const { currentUser } = useAuth()
+
+  const token = localStorage.getItem("token")
+  const userRole = localStorage.getItem("userRole")
+
+  console.log("PrivateRoute - AuthContext user:", currentUser ? "exists" : "null")
+  console.log("PrivateRoute - localStorage token:", token ? "exists" : "null")
+  console.log("PrivateRoute - localStorage role:", userRole)
+
+  if (adminOnly && userRole !== "ADMIN") {
+    console.log("PrivateRoute - Admin access required but user is not admin")
+    return <Navigate to="/login" />
   }
 
-  // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
-  if (!currentUser) {
-    return <Navigate to="/login" replace />;
+  if (currentUser || token) {
+    console.log("PrivateRoute - Authentication successful, rendering protected route")
+    return children
   }
 
-  // Sinon, afficher le contenu protégé
-  return children;
-};
+  console.log("PrivateRoute - No authentication found, redirecting to login")
+  return <Navigate to="/login" />
+}
 
-export default PrivateRoute;
+export default PrivateRoute
+

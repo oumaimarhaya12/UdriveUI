@@ -1,12 +1,13 @@
-'use client'
+"use client"
 
 import { useState, useEffect } from "react"
-import { Fuel, Settings, Users, Wind, Tag, Car, DollarSign } from 'lucide-react'
+import { Fuel, Settings, Users, Wind, Tag, Car, DollarSign } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import "../styles/CarDetails.css"
 
 // SVG gradient definition
 const IconGradient = () => (
-  <svg width="0" height="0" style={{ position: 'absolute' }}>
+  <svg width="0" height="0" style={{ position: "absolute" }}>
     <defs>
       <linearGradient id="icon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stopColor="#605ffa" />
@@ -17,12 +18,32 @@ const IconGradient = () => (
 )
 
 const CarDetailsComponent = ({ carId }) => {
+  const navigate = useNavigate()
   const [car, setCar] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [bookingData, setBookingData] = useState(null)
 
   useEffect(() => {
+    // Define fetchCarDetails inside useEffect to fix the dependency warning
+    const fetchCarDetails = async () => {
+      try {
+        const response = await fetch(`http://localhost:8084/api/Cars/${carId}`)
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch car details")
+        }
+
+        const data = await response.json()
+        setCar(data)
+        setLoading(false)
+      } catch (err) {
+        console.error("Error fetching car details:", err)
+        setError("Failed to load car details. Please try again later.")
+        setLoading(false)
+      }
+    }
+
     // Get the car data from sessionStorage if available
     const storedCar = sessionStorage.getItem("selectedCar")
     const storedBookingData = sessionStorage.getItem("bookingFormData")
@@ -38,25 +59,7 @@ const CarDetailsComponent = ({ carId }) => {
       // If not in sessionStorage, fetch from API
       fetchCarDetails()
     }
-  }, [carId])
-
-  const fetchCarDetails = async () => {
-    try {
-      const response = await fetch(`http://localhost:8084/api/Cars/${carId}`)
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch car details")
-      }
-
-      const data = await response.json()
-      setCar(data)
-      setLoading(false)
-    } catch (err) {
-      console.error("Error fetching car details:", err)
-      setError("Failed to load car details. Please try again later.")
-      setLoading(false)
-    }
-  }
+  }, [carId]) // Now carId is the only dependency needed
 
   const calculateDays = () => {
     if (!bookingData) return 0
@@ -78,6 +81,21 @@ const CarDetailsComponent = ({ carId }) => {
     return (car.price || 0) * days
   }
 
+  const handleConfirmBooking = () => {
+    // Check if user is logged in by looking for token
+    const token = localStorage.getItem("token")
+
+    if (!token) {
+      // If not logged in, redirect to login page
+      // Store the intended destination in sessionStorage to redirect after login
+      sessionStorage.setItem("redirectAfterLogin", "/booking-confirmed")
+      navigate("/login")
+    } else {
+      // If logged in, proceed to booking confirmation
+      navigate("/booking-confirmed")
+    }
+  }
+
   if (loading) {
     return <div className="loading">Loading car details...</div>
   }
@@ -93,7 +111,7 @@ const CarDetailsComponent = ({ carId }) => {
   const days = calculateDays()
 
   // Custom icon style for gradient
-  const iconStyle = { stroke: 'url(#icon-gradient)' };
+  const iconStyle = { stroke: "url(#icon-gradient)" }
 
   return (
     <div className="car-details-page">
@@ -197,7 +215,9 @@ const CarDetailsComponent = ({ carId }) => {
                     <span>{calculateTotalPrice()} MAD</span>
                   </div>
                 </div>
-                <button className="confirm-btn">Confirm Booking</button>
+                <button className="confirm-btn" onClick={handleConfirmBooking}>
+                  Confirm Booking
+                </button>
               </div>
             )}
           </div>
@@ -208,3 +228,4 @@ const CarDetailsComponent = ({ carId }) => {
 }
 
 export default CarDetailsComponent
+

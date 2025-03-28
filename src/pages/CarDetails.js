@@ -1,6 +1,6 @@
 "use client"
 import { useParams } from "react-router-dom"
-import Header2 from "../components/Header2"
+import Header from "../components/Header"
 import Footer from "../components/footer"
 import CarDetailsComponent from "../components/CarDetailsComponent"
 import PaymentDetails from "../components/PaymentDetails"
@@ -12,7 +12,7 @@ function CarDetailsPage() {
 
   return (
     <div className="car-details-page">
-      <Header2 />
+      <Header />
       <div className="content-container">
         <CarDetailsComponent carId={carId} />
         <PaymentDetails />
