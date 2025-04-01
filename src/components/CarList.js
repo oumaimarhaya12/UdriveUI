@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Fuel, Settings } from "lucide-react"
+import { Fuel, Settings, Tag } from "lucide-react"
 import "../styles/CarList.css"
 
 const CarList = ({ filters }) => {
@@ -23,7 +23,7 @@ const CarList = ({ filters }) => {
         }
 
         const response = await fetch(
-          `http://localhost:8084/api/Cars?pickupDate=${bookingData.pickupDate}T${bookingData.pickupTime}`,
+          `https://localhost:8084/api/Cars?pickupDate=${bookingData.pickupDate}T${bookingData.pickupTime}`,
         )
 
         if (!response.ok) {
@@ -116,11 +116,10 @@ const CarList = ({ filters }) => {
         {filteredCars.map((car, index) => (
           <div key={car.idCar || index} className="car-card">
             <div className="car-image">
-              <img src={car.imageUrl || "/placeholder.svg?height=180&width=300"} alt={car.model || "Car"} />
+              <img src={car.imageUrl || "/placeholder.svg?height=240&width=300"} alt={car.model || "Car"} />
             </div>
             <div className="car-details">
-              <h3 className="car-name">{car.model || "Model"}</h3>
-              <p className="car-category">{car.category || "Standard"}</p>
+              {/* Removed car name h3 element */}
 
               <div className="car-price-container">
                 <span className="price">{car.price || 0}MAD</span>
@@ -136,6 +135,10 @@ const CarList = ({ filters }) => {
                   <Fuel size={16} className="spec-icon" />
                   <span>{car.fuelType || "Gasoline"}</span>
                 </div>
+                <div className="spec-item">
+                  <Tag size={16} className="spec-icon" />
+                  <span>{car.category || "Standard"}</span>
+                </div>
               </div>
 
               <button className="view-details-btn" onClick={() => handleViewDetails(car)}>
@@ -150,3 +153,4 @@ const CarList = ({ filters }) => {
 }
 
 export default CarList
+

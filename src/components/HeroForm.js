@@ -38,8 +38,8 @@ const HeroForm = () => {
   const fetchAvailableCars = async () => {
     if (!pickupDate) return
     try {
-      const response = await fetch(`http://localhost:8084/api/Cars?pickupDate=${pickupDate}T${pickupTime}`)
-      console.log(`http://localhost:8084/api/Cars?pickupDate=${pickupDate}T${pickupTime}`)
+      const response = await fetch(`https://localhost:8084/api/Cars?pickupDate=${pickupDate}T${pickupTime}`)
+      console.log(`https://localhost:8084/api/Cars?pickupDate=${pickupDate}T${pickupTime}`)
       if (response.ok) {
         const result = await response.json()
         console.log(result)

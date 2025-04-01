@@ -102,7 +102,7 @@ const LoginForm = () => {
 
     try {
       // Call the login API endpoint
-      const response = await fetch("http://localhost:8084/api/login", {
+      const response = await fetch("https://localhost:8084/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

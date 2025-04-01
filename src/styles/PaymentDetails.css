@@ -1,157 +1,195 @@
-@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap");
 
-.payment-details-container {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
-  padding: 35px;
-  margin-top: 30px;
-  margin-bottom: 40px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
+.payment-info-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 30px auto;
+  padding: 0 20px;
   font-family: "Work Sans", sans-serif;
 }
 
-.payment-section,
-.cancellation-section {
-  background: linear-gradient(145deg, #f9f9f9, #ffffff);
+.info-card {
+  flex: 1;
+  min-width: 600px;
+  padding: 25px 30px;
   border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(96, 95, 250, 0.1);
+  background: linear-gradient(135deg, #605ffa, #9747ff);
+  color: white;
+  box-shadow: 0 10px 25px rgba(96, 95, 250, 0.2);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
 
   /* Animation properties */
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.payment-section.animate,
-.cancellation-section.animate {
+/* Add subtle background pattern */
+.info-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 20%);
+  pointer-events: none;
+}
+
+.info-card.animate {
   opacity: 1;
   transform: translateY(0);
 }
 
-.payment-header {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
+.info-card:hover {
+  box-shadow: 0 15px 30px rgba(96, 95, 250, 0.3);
 }
 
-/* Fixed icon styles */
-.payment-icon {
-  width: 36px;
-  height: 36px;
-  color: #605ffa;
+.card-icon {
+  background: rgba(255, 255, 255, 0.15);
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  position: relative;
+  overflow: hidden;
   transition: transform 0.3s ease;
 }
 
-.payment-section:hover .payment-icon,
-.cancellation-section:hover .payment-icon {
-  transform: scale(1.1) rotate(5deg);
+.card-icon::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+  z-index: 1;
 }
 
-.payment-header h3 {
-  font-size: 22px;
+.info-card:hover .card-icon {
+  transform: scale(1.05);
+}
+
+.card-icon svg {
+  color: white;
+  position: relative;
+  z-index: 2;
+}
+
+h3 {
+  font-size: 20px;
   font-weight: 600;
-  color: #1a1b34;
-  margin: 0;
+  margin: 0 0 12px;
+  color: white;
+  letter-spacing: 0.3px;
 }
 
-.payment-content {
-  color: #1a1b34;
+p {
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 20px;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-.payment-text {
-  font-size: 16px;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.contact-details {
+.contact-info {
+  margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 20px;
+  gap: 12px;
 }
 
 .contact-item {
   display: flex;
   align-items: center;
-  gap: 15px;
-  transition: transform 0.3s ease;
-  padding: 8px;
-  border-radius: 8px;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  color: white !important;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 .contact-item:hover {
   transform: translateX(5px);
-  background-color: rgba(96, 95, 250, 0.05);
 }
 
-/* Fixed icon styles */
-.contact-icon {
-  width: 32px;
-  height: 32px;
-  color: #605ffa;
-  transition: transform 0.3s ease;
+.contact-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  transition: all 0.3s ease;
 }
 
-.contact-item:hover .contact-icon {
+.contact-item:hover .contact-icon-wrapper {
+  background: rgba(255, 255, 255, 0.25);
   transform: scale(1.1);
 }
 
-.contact-info {
-  display: flex;
-  flex-direction: column;
+.contact-icon-wrapper svg {
+  color: white;
 }
 
-.contact-label {
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.6);
-  margin-bottom: 4px;
-}
-
-.contact-value {
-  font-size: 16px;
+.contact-item span {
+  font-size: 15px;
   font-weight: 500;
-  color: #605ffa;
-  text-decoration: none;
-  transition: color 0.2s;
+  color: white;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
-.contact-value:hover {
-  color: #4b4ad7;
-  text-decoration: underline;
+/* Underline effect on hover */
+.contact-item span::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: white;
+  transition: width 0.3s ease;
 }
 
-/* Responsive design */
-@media (max-width: 992px) {
-  .payment-details-container {
-    grid-template-columns: 1fr;
-    gap: 20px;
+.contact-item:hover span::after {
+  width: 100%;
+}
+
+.contact-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: white !important;
+}
+
+/* Force white text color with higher specificity */
+.info-card .contact-item span,
+.info-card .contact-info a span,
+.contact-info .contact-item .contact-text {
+  color: white !important;
+}
+
+@media (max-width: 768px) {
+  .payment-info-container {
+    flex-direction: column;
   }
 
-  /* Adjust animation delay for stacked layout */
-  .payment-section,
-  .cancellation-section {
-    transition-delay: 0.1s;
+  .info-card {
+    width: 100%;
   }
 }
 
-@media (max-width: 576px) {
-  .payment-details-container {
-    padding: 20px;
-  }
-
-  .payment-section,
-  .cancellation-section {
-    padding: 20px;
-  }
-
-  .payment-text {
-    font-size: 15px;
-  }
-}
