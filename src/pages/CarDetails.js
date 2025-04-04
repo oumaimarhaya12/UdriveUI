@@ -21,7 +21,6 @@ function CarDetailsPage() {
       <Footer />
     </div>
   )
-  //éugfrlhl"'f
 }
 
 export default CarDetailsPage

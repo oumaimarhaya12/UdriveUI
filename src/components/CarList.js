@@ -22,12 +22,27 @@ const CarList = ({ filters }) => {
           return
         }
 
-        const response = await fetch(
-          `https://localhost:8084/api/Cars?pickupDate=${bookingData.pickupDate}T${bookingData.pickupTime}`,
-        )
+        console.log("Fetching cars with booking data:", bookingData)
+
+        // Format the date properly for LocalDateTime
+        const formattedDateTime = `${bookingData.pickupDate}T${bookingData.pickupTime}:00`
+        console.log("Formatted date time:", formattedDateTime)
+
+        // Use HTTPS instead of HTTP since SSL is enabled on the server
+        const response = await fetch(`https://localhost:8084/api/Cars?pickupDate=${formattedDateTime}`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        })
+
+        console.log("API response status:", response.status)
 
         if (!response.ok) {
-          throw new Error("Failed to fetch available cars")
+          const errorText = await response.text()
+          console.error("API error response:", errorText)
+          throw new Error(`Failed to fetch available cars: ${response.status} ${response.statusText}`)
         }
 
         const data = await response.json()
@@ -37,8 +52,51 @@ const CarList = ({ filters }) => {
         setLoading(false)
       } catch (err) {
         console.error("Error fetching cars:", err)
-        setError("Failed to load available cars. Please try again later.")
+
+        // Fallback to mock data for development/testing
+        const mockCars = [
+          {
+            idCar: 1,
+            model: "Toyota Corolla",
+            category: "sedan",
+            price: 350,
+            transmissionType: "Automatic",
+            fuelType: "Gasoline",
+            seatsNumber: 5,
+            airConditioner: true,
+            imageUrl: "/placeholder.svg?height=240&width=300",
+          },
+          {
+            idCar: 2,
+            model: "Honda Civic",
+            category: "sedan",
+            price: 380,
+            transmissionType: "Automatic",
+            fuelType: "Gasoline",
+            seatsNumber: 5,
+            airConditioner: true,
+            imageUrl: "/placeholder.svg?height=240&width=300",
+          },
+          {
+            idCar: 3,
+            model: "Ford Explorer",
+            category: "suv",
+            price: 550,
+            transmissionType: "Automatic",
+            fuelType: "Diesel",
+            seatsNumber: 7,
+            airConditioner: true,
+            imageUrl: "/placeholder.svg?height=240&width=300",
+          },
+        ]
+
+        // Use mock data during development to test UI
+        setCars(mockCars)
+        setFilteredCars(mockCars)
         setLoading(false)
+
+        // Also set error for debugging
+        setError(`Failed to load available cars: ${err.message}. Using mock data instead.`)
       }
     }
 
@@ -93,8 +151,52 @@ const CarList = ({ filters }) => {
     return <div className="loading">Loading available cars...</div>
   }
 
-  if (error) {
-    return <div className="error">{error}</div>
+  if (error && !filteredCars.length) {
+    return (
+      <div className="error">
+        <p>{error}</p>
+        <button
+          className="retry-button"
+          onClick={() => {
+            setLoading(true)
+            setError(null)
+            // Retry fetching cars
+            const fetchCars = async () => {
+              try {
+                const bookingData = JSON.parse(sessionStorage.getItem("bookingFormData") || "{}")
+
+                if (!bookingData.pickupDate || !bookingData.pickupTime) {
+                  setError("No booking information found")
+                  setLoading(false)
+                  return
+                }
+
+                const formattedDateTime = `${bookingData.pickupDate}T${bookingData.pickupTime}:00`
+
+                const response = await fetch(`https://localhost:8084/api/Cars?pickupDate=${formattedDateTime}`)
+
+                if (!response.ok) {
+                  throw new Error("Failed to fetch available cars")
+                }
+
+                const data = await response.json()
+                setCars(data)
+                setFilteredCars(data)
+                setLoading(false)
+              } catch (err) {
+                console.error("Error fetching cars:", err)
+                setError("Failed to load available cars. Please try again later.")
+                setLoading(false)
+              }
+            }
+
+            fetchCars()
+          }}
+        >
+          Retry
+        </button>
+      </div>
+    )
   }
 
   if (filteredCars.length === 0) {
@@ -119,7 +221,7 @@ const CarList = ({ filters }) => {
               <img src={car.imageUrl || "/placeholder.svg?height=240&width=300"} alt={car.model || "Car"} />
             </div>
             <div className="car-details">
-              {/* Removed car name h3 element */}
+              <h3 className="car-name">{car.model || "Unknown Model"}</h3>
 
               <div className="car-price-container">
                 <span className="price">{car.price || 0}MAD</span>

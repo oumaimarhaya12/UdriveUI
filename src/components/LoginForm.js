@@ -79,8 +79,8 @@ const LoginForm = () => {
         // Default navigation based on role if no specific redirect path
         const role = localStorage.getItem("userRole")
         if (role === "ADMIN") {
-          console.log("Redirecting to dashboard")
-          navigate("/dashboard")
+          console.log("Redirecting to admin page")
+          navigate("/admin")
         } else {
           console.log("Redirecting to home")
           navigate("/")
@@ -155,7 +155,7 @@ const LoginForm = () => {
       if (redirectPath) {
         setSuccessMessage(`Login successful! Redirecting you back...`)
       } else {
-        const destination = role === "ADMIN" ? "dashboard" : "home page"
+        const destination = role === "ADMIN" ? "admin" : "home page"
         setSuccessMessage(`Login successful! Redirecting to ${destination}...`)
       }
 
@@ -195,7 +195,7 @@ const LoginForm = () => {
         } else {
           // Navigate based on role
           if (role === "ADMIN") {
-            navigate("/dashboard")
+            navigate("/admin")
           } else {
             navigate("/")
           }
@@ -224,7 +224,17 @@ const LoginForm = () => {
         {successMessage && (
           <div className="success-message">
             <div className="success-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </div>
@@ -382,3 +392,4 @@ const LoginForm = () => {
 }
 
 export default LoginForm
+

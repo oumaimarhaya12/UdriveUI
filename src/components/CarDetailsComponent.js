@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Fuel, Settings, Users, Wind, Tag, Car, DollarSign } from "lucide-react"
+import { Fuel, Settings, Users, Wind, Tag, Car, DollarSign, AlertCircle } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import "../styles/CarDetails.css"
 
@@ -23,12 +23,14 @@ const CarDetailsComponent = ({ carId }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [bookingData, setBookingData] = useState(null)
+  const [reservationLoading, setReservationLoading] = useState(false)
+  const [reservationError, setReservationError] = useState(null)
 
   useEffect(() => {
     // Define fetchCarDetails inside useEffect to fix the dependency warning
     const fetchCarDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:8084/api/Cars/${carId}`)
+        const response = await fetch(`https://localhost:8084/api/Cars/${carId}`)
 
         if (!response.ok) {
           throw new Error("Failed to fetch car details")
@@ -81,18 +83,78 @@ const CarDetailsComponent = ({ carId }) => {
     return (car.price || 0) * days
   }
 
-  const handleConfirmBooking = () => {
-    // Check if user is logged in by looking for token
+  const handleConfirmBooking = async () => {
     const token = localStorage.getItem("token")
+    console.log("Token:", token)
 
     if (!token) {
-      // If not logged in, redirect to login page
-      // Store the intended destination in sessionStorage to redirect after login
       sessionStorage.setItem("redirectAfterLogin", "/booking-confirmed")
       navigate("/login")
-    } else {
-      // If logged in, proceed to booking confirmation
+      return
+    }
+
+    if (!bookingData || !car) {
+      setReservationError("Missing booking data or car information")
+      return
+    }
+
+    // Create reservation
+    try {
+      setReservationLoading(true)
+      setReservationError(null)
+
+      // Format dates properly for the API
+      const pickupDateTime = `${bookingData.pickupDate}T${bookingData.pickupTime}:00`
+      const dropoffDateTime = `${bookingData.dropoffDate}T${bookingData.dropoffTime}:00`
+
+      // Use actual data from the booking form and selected car
+      const reservationData = {
+        idCar: car.idCar || car.id,
+        pickUpDate: pickupDateTime,
+        dropOffDate: dropoffDateTime,
+        puckUpAdress: bookingData.pickupDetails,
+        dropOffAdress: bookingData.dropoffDetails,
+        price: calculateTotalPrice(),
+        token: token,
+      }
+
+      console.log("Sending reservation data:", reservationData)
+
+      const response = await fetch("https://localhost:8084/api/addreservation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(reservationData),
+      })
+
+      let responseData
+      const responseText = await response.text()
+
+      try {
+        responseData = responseText ? JSON.parse(responseText) : {}
+      } catch (parseError) {
+        console.error("Error parsing response:", parseError)
+        responseData = { message: responseText }
+      }
+
+      console.log("API response:", response.status, responseData)
+
+      if (!response.ok) {
+        throw new Error(responseData.message || `Failed to create reservation: ${response.status}`)
+      }
+
+      // Store the reservation result in sessionStorage for use in the confirmation page
+      sessionStorage.setItem("reservationData", JSON.stringify(responseData))
+
+      // Navigate to confirmation page
       navigate("/booking-confirmed")
+    } catch (err) {
+      console.error("Reservation Error:", err)
+      setReservationError(err.message || "Failed to create reservation. Please try again.")
+    } finally {
+      setReservationLoading(false)
     }
   }
 
@@ -215,9 +277,15 @@ const CarDetailsComponent = ({ carId }) => {
                     <span>{calculateTotalPrice()} MAD</span>
                   </div>
                 </div>
-                <button className="confirm-btn" onClick={handleConfirmBooking}>
-                  Confirm Booking
+                <button className="confirm-btn" onClick={handleConfirmBooking} disabled={reservationLoading}>
+                  {reservationLoading ? "Processing..." : "Confirm Booking"}
                 </button>
+                {reservationError && (
+                  <div className="api-error">
+                    <AlertCircle size={16} />
+                    <span>{reservationError}</span>
+                  </div>
+                )}
               </div>
             )}
           </div>

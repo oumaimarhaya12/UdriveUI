@@ -2,7 +2,23 @@
 
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { Check, Calendar, Clock, MapPin, AlertTriangle, Download, Printer, Phone, Mail, FileText, UserCheck, ArrowRight, CreditCard, Car } from 'lucide-react'
+import {
+  Check,
+  Calendar,
+  Clock,
+  MapPin,
+  AlertTriangle,
+  Download,
+  Printer,
+  Phone,
+  Mail,
+  FileText,
+  UserCheck,
+  ArrowRight,
+  CreditCard,
+  Car,
+  User,
+} from "lucide-react"
 import Header from "../components/Header"
 import Footer from "../components/footer"
 import "../styles/BookingConfirmed.css"
@@ -11,12 +27,52 @@ const BookingConfirmed = () => {
   const navigate = useNavigate()
   const [bookingData, setBookingData] = useState(null)
   const [car, setCar] = useState(null)
+  const [userInfo, setUserInfo] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  // Function to decode JWT token
+  const decodeToken = (token) => {
+    try {
+      if (!token || typeof token !== "string" || !token.includes(".")) {
+        throw new Error("Invalid token format")
+      }
+
+      // JWT tokens are split into three parts: header.payload.signature
+      const parts = token.split(".")
+      if (parts.length !== 3) {
+        throw new Error("Invalid token structure")
+      }
+
+      const base64Url = parts[1]
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/")
+
+      try {
+        // For browsers
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .join(""),
+        )
+        return JSON.parse(jsonPayload)
+      } catch (e) {
+        // For Node.js or if atob fails
+        const jsonPayload = Buffer.from(base64, "base64").toString("utf8")
+        return JSON.parse(jsonPayload)
+      }
+    } catch (error) {
+      console.error("Error decoding token:", error)
+      return null
+    }
+  }
 
   useEffect(() => {
+    setLoading(true)
+
     // Get booking data and car details from sessionStorage
     const storedBookingData = sessionStorage.getItem("bookingFormData")
     const storedCar = sessionStorage.getItem("selectedCar")
-    
+
     if (storedBookingData) {
       setBookingData(JSON.parse(storedBookingData))
     }
@@ -24,7 +80,54 @@ const BookingConfirmed = () => {
     if (storedCar) {
       setCar(JSON.parse(storedCar))
     }
+
+    // Get user information from JWT token
+    const token = localStorage.getItem("token")
+    if (token) {
+      const decodedToken = decodeToken(token)
+      console.log("Decoded token:", decodedToken)
+
+      if (decodedToken) {
+        // Extract user information from token
+        // Adjust these fields based on your actual JWT payload structure
+        const user = {
+          email: decodedToken.email || decodedToken.sub || "",
+          phone: decodedToken.phone_number || "",
+        }
+
+        setUserInfo(user)
+
+        // If token doesn't have email, try to fetch from API
+        if (!user.email) {
+          fetchUserInfo(token)
+        }
+      }
+    }
+
+    setLoading(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Function to fetch additional user info if not in token
+  const fetchUserInfo = async (token) => {
+    try {
+      const response = await fetch("http://localhost:8084/api/user/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        const userData = await response.json()
+        setUserInfo((prevState) => ({
+          ...prevState,
+          email: userData.email || prevState?.email || "",
+        }))
+      }
+    } catch (error) {
+      console.error("Error fetching user info:", error)
+    }
+  }
 
   const handleDownloadClick = () => {
     window.print()
@@ -46,7 +149,7 @@ const BookingConfirmed = () => {
     return date.toLocaleDateString("en-US", options)
   }
 
-  if (!bookingData || !car) {
+  if (loading || !bookingData || !car) {
     return (
       <div>
         <Header />
@@ -78,7 +181,7 @@ const BookingConfirmed = () => {
   return (
     <div className="booking-confirmed-page">
       <Header />
-      
+
       <div className="booking-confirmed-container">
         <div className="booking-success-header">
           <div className="success-icon">
@@ -92,9 +195,33 @@ const BookingConfirmed = () => {
 
         <div className="booking-confirmed-content">
           <div className="booking-confirmed-main">
+            {/* Client Information Section - Only showing email */}
+            {userInfo && userInfo.email && (
+              <div className="client-info-section">
+                <h2>Client Information</h2>
+                <div className="client-info-content">
+                  <div className="client-info-icon">
+                    <User size={32} />
+                  </div>
+                  <div className="client-details">
+                    <div className="client-detail-item">
+                      <span className="client-detail-label">Email:</span>
+                      <span className="client-detail-value">{userInfo.email}</span>
+                    </div>
+                    {userInfo.phone && (
+                      <div className="client-detail-item">
+                        <span className="client-detail-label">Phone:</span>
+                        <span className="client-detail-value">{userInfo.phone}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="booking-details-section">
               <h2>Booking Details</h2>
-              
+
               {/* Simplified Booking Summary */}
               <div className="booking-summary">
                 <div className="booking-location-container">
@@ -172,7 +299,7 @@ const BookingConfirmed = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="car-summary">
                 <div className="car-image">
                   <img src={car.imageUrl || "/placeholder.svg?height=200&width=300"} alt={car.model} />
@@ -202,7 +329,7 @@ const BookingConfirmed = () => {
                     <p>Please bring a copy of your identity card when picking up your car</p>
                   </div>
                 </div>
-                
+
                 <div className="document-item">
                   <div className="document-icon">
                     <UserCheck size={24} />
@@ -213,7 +340,7 @@ const BookingConfirmed = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="contact-verification">
                 <AlertTriangle size={18} />
                 <p>Ensure your contact information is correct so we can reach you.</p>
@@ -228,7 +355,10 @@ const BookingConfirmed = () => {
                 </div>
                 <div className="payment-info-text">
                   <h4>No upfront payment is required</h4>
-                  <p>Simply pay in cash upon delivery. We accept all major payment methods including credit cards and cash.</p>
+                  <p>
+                    Simply pay in cash upon delivery. We accept all major payment methods including credit cards and
+                    cash.
+                  </p>
                 </div>
               </div>
               <div className="payment-methods-display">
@@ -331,3 +461,4 @@ const BookingConfirmed = () => {
 }
 
 export default BookingConfirmed
+
