@@ -120,7 +120,7 @@ const CarDetailsComponent = ({ carId }) => {
 
       console.log("Sending reservation data:", reservationData)
 
-      const response = await fetch("https://localhost:8084/api/addreservation", {
+      const response = await fetch("https://localhost:8084/api/reservation/addreservation", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

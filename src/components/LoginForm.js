@@ -36,28 +36,6 @@ const LoginForm = () => {
     }
   }
 
-  // Function to get user role from token or API
-  const getUserRole = async (token) => {
-    try {
-      // Option 1: Decode the JWT token if it contains role information
-      const decodedToken = decodeToken(token)
-      if (decodedToken && decodedToken.role) {
-        return decodedToken.role
-      }
-
-      // For testing purposes - assign ADMIN role to specific test emails
-      if (email === "admin@example.com") {
-        console.log("Test admin email detected")
-        return "ADMIN"
-      }
-
-      return "CLIENT" // Default to CLIENT role if unable to determine
-    } catch (error) {
-      console.error("Error getting user role:", error)
-      return "CLIENT" // Default to CLIENT role if unable to determine
-    }
-  }
-
   // Handle countdown for redirect after successful login
   useEffect(() => {
     if (redirectCountdown > 0) {
@@ -69,20 +47,22 @@ const LoginForm = () => {
     } else if (redirectCountdown === 0 && successMessage) {
       // Check if there's a stored redirect destination
       const redirectPath = sessionStorage.getItem("redirectAfterLogin")
+      const role = localStorage.getItem("userRole")
+      
+      console.log("Redirect countdown complete. Role from localStorage:", role)
 
       if (redirectPath) {
         // Clear the stored redirect path
         sessionStorage.removeItem("redirectAfterLogin")
-        console.log("Redirecting to:", redirectPath)
+        console.log("Redirecting to stored path:", redirectPath)
         navigate(redirectPath)
       } else {
-        // Default navigation based on role if no specific redirect path
-        const role = localStorage.getItem("userRole")
+        // Default navigation based on role
         if (role === "ADMIN") {
-          console.log("Redirecting to admin page")
-          navigate("/admin")
+          console.log("Role is ADMIN, redirecting to dashboard")
+          navigate("/dashboard")
         } else {
-          console.log("Redirecting to home")
+          console.log("Role is CLIENT, redirecting to home")
           navigate("/")
         }
       }
@@ -102,7 +82,7 @@ const LoginForm = () => {
 
     try {
       // Call the login API endpoint
-      const response = await fetch("https://localhost:8084/api/login", {
+      const response = await fetch("https://localhost:8084/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -115,27 +95,60 @@ const LoginForm = () => {
 
       console.log("Response status:", response.status)
 
-      // Check if the response status is 403 (Forbidden)
-      if (response.status === 403) {
-        throw new Error("Invalid email or password")
-      }
-
       if (!response.ok) {
         throw new Error("Login failed. Please try again.")
       }
 
-      // Get the token from the response
-      const token = await response.text()
-      console.log("Login successful, token:", token)
+      // Parse the JSON response
+      const data = await response.json()
+      console.log("Login successful, full response:", data)
 
       // Store the token in localStorage
+      const token = data.token || data.accessToken
       localStorage.setItem("token", token)
+      
+      // Store email for reference
+      localStorage.setItem("userEmail", email)
 
-      // Get user role
-      const role = await getUserRole(token)
-      console.log("User role determined:", role)
-
-      // Store user role in localStorage for use in other components
+      // Determine role based on the response format
+      let role = "CLIENT" // Default role
+      
+      // Check for role_id in the response
+      if (data.roles && Array.isArray(data.roles)) {
+        console.log("Roles from response:", data.roles)
+        // Check if roles contains role_id=1 (admin)
+        if (data.roles.includes(1) || data.roles.includes("1") || 
+            data.roles.includes("ROLE_ADMIN") || data.roles.includes("ADMIN")) {
+          role = "ADMIN"
+        }
+      }
+      
+      // Check if there's a single role field
+      if (data.role) {
+        console.log("Role from response:", data.role)
+        if (data.role === 1 || data.role === "1" || 
+            data.role === "ROLE_ADMIN" || data.role === "ADMIN") {
+          role = "ADMIN"
+        }
+      }
+      
+      // Check if the user object has a role_id
+      if (data.user && data.user.role_id) {
+        console.log("User role_id from response:", data.user.role_id)
+        if (data.user.role_id === 1 || data.user.role_id === "1") {
+          role = "ADMIN"
+        }
+      }
+      
+      // Special case for admin email
+      if (email === "admin@udrive.com") {
+        console.log("Admin email detected, forcing ADMIN role")
+        role = "ADMIN"
+      }
+      
+      console.log("Final determined role:", role)
+      
+      // Store user role in localStorage
       localStorage.setItem("userRole", role)
 
       // Create a user object for AuthContext if possible
@@ -143,7 +156,6 @@ const LoginForm = () => {
         const userObj = {
           email: email,
           role: role,
-          // Add other properties as needed
         }
         setCurrentUser(userObj)
       }
@@ -155,7 +167,7 @@ const LoginForm = () => {
       if (redirectPath) {
         setSuccessMessage(`Login successful! Redirecting you back...`)
       } else {
-        const destination = role === "ADMIN" ? "admin" : "home page"
+        const destination = role === "ADMIN" ? "dashboard" : "home page"
         setSuccessMessage(`Login successful! Redirecting to ${destination}...`)
       }
 
@@ -163,7 +175,7 @@ const LoginForm = () => {
     } catch (err) {
       console.error("Login error:", err)
       setError(err.message || "Invalid email or password. Please try again.")
-      setIsLoading(false) // Make sure loading state is reset on error
+      setIsLoading(false)
     } finally {
       setIsLoading(false)
     }
@@ -177,10 +189,11 @@ const LoginForm = () => {
       // For Google Sign-In, you might need to handle role determination differently
       if (result && result.user) {
         // Check if the user is an admin (you might have this info in your database)
-        const adminEmails = ["admin@example.com", "admin@yourdomain.com"]
+        const adminEmails = ["admin@example.com", "admin@yourdomain.com", "admin@udrive.com"]
         const role = adminEmails.includes(result.user.email) ? "ADMIN" : "CLIENT"
 
         localStorage.setItem("userRole", role)
+        localStorage.setItem("userEmail", result.user.email)
 
         console.log("Google sign-in successful, role:", role)
 
@@ -195,7 +208,7 @@ const LoginForm = () => {
         } else {
           // Navigate based on role
           if (role === "ADMIN") {
-            navigate("/admin")
+            navigate("/dashboard") // Changed from "/admin" to "/dashboard"
           } else {
             navigate("/")
           }
@@ -392,4 +405,3 @@ const LoginForm = () => {
 }
 
 export default LoginForm
-

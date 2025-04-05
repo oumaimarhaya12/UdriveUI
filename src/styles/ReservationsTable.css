@@ -1,0 +1,172 @@
+/* Table styles */
+.table-container {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-top: 24px;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .reservations-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .reservations-table th {
+    background-color: #f9fafb;
+    padding: 16px;
+    text-align: left;
+    color: #6b7280;
+    font-weight: 600;
+    font-size: 14px;
+    border-bottom: 1px solid #e5e7eb;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .reservations-table td {
+    padding: 16px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 14px;
+    color: #111827;
+    transition: background-color 0.2s ease;
+  }
+  
+  .reservations-table tr:hover td {
+    background-color: #f9fafb;
+  }
+  
+  .reservations-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .client-name {
+    font-weight: 600;
+    color: #111827;
+  }
+  
+  .vehicle-info,
+  .date-info,
+  .location-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    color: #605ffa;
+  }
+  
+  .price {
+    font-weight: 600;
+    color: #111827;
+  }
+  
+  /* Action buttons */
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .confirm-button {
+    background-color: #10b981;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .confirm-button:hover {
+    background-color: #059669;
+    transform: translateY(-1px);
+  }
+  
+  .confirm-button:active {
+    transform: translateY(0);
+  }
+  
+  .decline-button {
+    background-color: #ef4444;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .decline-button:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+  }
+  
+  .decline-button:active {
+    transform: translateY(0);
+  }
+  
+  /* Loading state */
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px;
+  }
+  
+  .loading-spinner {
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-left: 3px solid #605ffa;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Empty state */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px;
+    color: #9ca3af;
+  }
+  
+  .empty-state svg {
+    margin-bottom: 16px;
+    color: #d1d5db;
+    width: 48px;
+    height: 48px;
+  }
+  
+  .empty-state p {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  

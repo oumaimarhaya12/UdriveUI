@@ -1,0 +1,72 @@
+.page-header {
+    margin-bottom: 32px;
+  }
+  
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  
+  .greeting-container {
+    flex: 1;
+  }
+  
+  .greeting {
+    color: #0c2142;
+    font-family: "Work Sans", sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  
+  .admin-name {
+    color: #605ffa;
+    font-weight: 700;
+  }
+  
+  .welcome-message {
+    color: #6b7280;
+    font-size: 16px;
+    margin-top: 4px;
+  }
+  
+  .date-time {
+    display: flex;
+    align-items: center;
+    background-color: #f9fafb;
+    padding: 8px 16px;
+    border-radius: 8px;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+  }
+  
+  .clock-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    color: #605ffa;
+  }
+  
+  .header-divider {
+    height: 1px;
+    background: linear-gradient(to right, #605ffa, rgba(96, 95, 250, 0.1));
+    margin-bottom: 24px;
+  }
+  
+  @media (max-width: 768px) {
+    .header-content {
+      flex-direction: column;
+    }
+    
+    .date-time {
+      margin-top: 16px;
+      align-self: flex-start;
+    }
+  }
+  

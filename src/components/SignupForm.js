@@ -335,7 +335,7 @@ const SignupForm = () => {
       console.log("Sending user data to backend:", userData)
 
       // Call the backend API
-      const response = await fetch("https://localhost:8084/api/signup", {
+      const response = await fetch("https://localhost:8084/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
