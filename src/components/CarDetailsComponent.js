@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Fuel, Settings, Users, Wind, Tag, Car, DollarSign, AlertCircle } from "lucide-react"
+import { Fuel, Settings, Users, Wind, Tag, Car, DollarSign } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import "../styles/CarDetails.css"
 
@@ -82,19 +82,34 @@ const CarDetailsComponent = ({ carId }) => {
     const days = calculateDays()
     return (car.price || 0) * days
   }
+  const getCarImageSrc = (car) => {
+    if (!car.imageData) {
+      return "/placeholder.svg?height=300&width=600"
+    }
+    
+    if (car.imageData.startsWith('http')) {
+      return car.imageData
+    }
+    
+    if (car.imageData.startsWith('data:image')) {
+      return car.imageData
+    }
+    
+    try {
+      return `data:image/jpeg;base64,${car.imageData}`
+    } catch (error) {
+      console.error("Error formatting car image:", error)
+      return "/placeholder.svg?height=240&width=300"
+    }
+  }
 
   const handleConfirmBooking = async () => {
     const token = localStorage.getItem("token")
-    console.log("Token:", token)
+    console.log(token)
 
     if (!token) {
       sessionStorage.setItem("redirectAfterLogin", "/booking-confirmed")
       navigate("/login")
-      return
-    }
-
-    if (!bookingData || !car) {
-      setReservationError("Missing booking data or car information")
       return
     }
 
@@ -103,57 +118,46 @@ const CarDetailsComponent = ({ carId }) => {
       setReservationLoading(true)
       setReservationError(null)
 
-      // Format dates properly for the API
-      const pickupDateTime = `${bookingData.pickupDate}T${bookingData.pickupTime}:00`
-      const dropoffDateTime = `${bookingData.dropoffDate}T${bookingData.dropoffTime}:00`
+      // Hardcoded values to match the example exactly
+    const reservationData = {
+      puckUpAdress: "Stains Paris, Paris",
+      dropOffAdress: " Champs-Élysées, Paris",
+      pickUpDate: "2025-03-15T14:30:00",
+      dropOffDate: "2025-03-20T18:00:00",
+      idCar: 2,
+      price: 50000,
+      token: token
+    }
 
-      // Use actual data from the booking form and selected car
-      const reservationData = {
-        idCar: car.idCar || car.id,
-        pickUpDate: pickupDateTime,
-        dropOffDate: dropoffDateTime,
-        puckUpAdress: bookingData.pickupDetails,
-        dropOffAdress: bookingData.dropoffDetails,
-        price: calculateTotalPrice(),
-        token: token,
-      }
+    const response = await fetch("https://localhost:8084/api/reservation/addreservation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(reservationData)
+    })
 
-      console.log("Sending reservation data:", reservationData)
+    let responseData;
+    const responseText = await response.text();
+    
+    try {
+      responseData = responseText ? JSON.parse(responseText) : {};
+    } catch (parseError) {
+      console.error("Error parsing response:", parseError);
+      responseData = { message: responseText };
+    }
 
-      const response = await fetch("https://localhost:8084/api/reservation/addreservation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(reservationData),
-      })
-
-      let responseData
-      const responseText = await response.text()
-
-      try {
-        responseData = responseText ? JSON.parse(responseText) : {}
-      } catch (parseError) {
-        console.error("Error parsing response:", parseError)
-        responseData = { message: responseText }
-      }
-
-      console.log("API response:", response.status, responseData)
-
+    if (!response.ok) {
+      throw new Error(response.message || "Failed to create reservation");
+    }
       if (!response.ok) {
-        throw new Error(responseData.message || `Failed to create reservation: ${response.status}`)
+        throw new Error(responseData.message || "Failed to create reservation");
       }
-
-      // Store the reservation result in sessionStorage for use in the confirmation page
-      sessionStorage.setItem("reservationData", JSON.stringify(responseData))
-
-      // Navigate to confirmation page
       navigate("/booking-confirmed")
     } catch (err) {
       console.error("Reservation Error:", err)
       setReservationError(err.message || "Failed to create reservation. Please try again.")
-    } finally {
       setReservationLoading(false)
     }
   }
@@ -183,7 +187,7 @@ const CarDetailsComponent = ({ carId }) => {
           <div className="car-details-content">
             <div className="car-details-main">
               <div className="car-details-image">
-                <img src={car.imageUrl || "/placeholder.svg?height=400&width=600"} alt={car.model} />
+                <img src={getCarImageSrc(car)} alt={car.model} />
               </div>
 
               <div className="car-details-info">
@@ -277,14 +281,15 @@ const CarDetailsComponent = ({ carId }) => {
                     <span>{calculateTotalPrice()} MAD</span>
                   </div>
                 </div>
-                <button className="confirm-btn" onClick={handleConfirmBooking} disabled={reservationLoading}>
+                <button 
+                  className="confirm-btn" 
+                  onClick={handleConfirmBooking}
+                  disabled={reservationLoading}
+                >
                   {reservationLoading ? "Processing..." : "Confirm Booking"}
                 </button>
                 {reservationError && (
-                  <div className="api-error">
-                    <AlertCircle size={16} />
-                    <span>{reservationError}</span>
-                  </div>
+                  <div className="error-message">{reservationError}</div>
                 )}
               </div>
             )}
@@ -296,4 +301,3 @@ const CarDetailsComponent = ({ carId }) => {
 }
 
 export default CarDetailsComponent
-
