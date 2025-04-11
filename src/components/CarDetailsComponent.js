@@ -102,63 +102,79 @@ const CarDetailsComponent = ({ carId }) => {
       return "/placeholder.svg?height=240&width=300"
     }
   }
-
   const handleConfirmBooking = async () => {
     const token = localStorage.getItem("token")
-    console.log(token)
-
+    
     if (!token) {
       sessionStorage.setItem("redirectAfterLogin", "/booking-confirmed")
       navigate("/login")
       return
     }
-
-    // Create reservation
+  
     try {
       setReservationLoading(true)
       setReservationError(null)
-
-      // Hardcoded values to match the example exactly
-    const reservationData = {
-      puckUpAdress: "Stains Paris, Paris",
-      dropOffAdress: " Champs-Élysées, Paris",
-      pickUpDate: "2025-03-15T14:30:00",
-      dropOffDate: "2025-03-20T18:00:00",
-      idCar: 2,
-      price: 50000,
-      token: token
-    }
-
-    const response = await fetch("https://localhost:8084/api/reservation/addreservation", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-      body: JSON.stringify(reservationData)
-    })
-
-    let responseData;
-    const responseText = await response.text();
-    
-    try {
-      responseData = responseText ? JSON.parse(responseText) : {};
-    } catch (parseError) {
-      console.error("Error parsing response:", parseError);
-      responseData = { message: responseText };
-    }
-
-    if (!response.ok) {
-      throw new Error(response.message || "Failed to create reservation");
-    }
-      if (!response.ok) {
-        throw new Error(responseData.message || "Failed to create reservation");
+  
+      // Create the reservation data from actual bookingData rather than hardcoded values
+      const reservationData = {
+        puckUpAdress: bookingData?.pickupDetails || "Stains Paris, Paris",
+        dropOffAdress: bookingData?.dropoffDetails || "Champs-Élysées, Paris",
+        pickUpDate: bookingData?.pickupDate ? 
+          `${bookingData.pickupDate}T${bookingData.pickupTime}:00` : 
+          "2025-03-15T14:30:00",
+        dropOffDate: bookingData?.dropoffDate ? 
+          `${bookingData.dropoffDate}T${bookingData.dropoffTime}:00` : 
+          "2025-03-20T18:00:00",
+        idCar: car.id || carId,
+        price: calculateTotalPrice(),
+        token: token
       }
-      navigate("/booking-confirmed")
+  
+      console.log("Sending reservation data:", reservationData);
+      
+      // Check if your API is working with a test request
+      const apiCheckResponse = await fetch("https://localhost:8084/api", {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${token}` }
+      }).catch(err => {
+        console.error("API connectivity test failed:", err);
+        throw new Error("Cannot connect to the reservation service. Please check your connection.");
+      });
+      
+      // Make the actual reservation request
+      const response = await fetch("https://localhost:8084/api/reservation/addreservation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(reservationData)
+      });
+  
+      // Log the status and response for debugging
+      console.log("Reservation response status:", response.status);
+      const responseText = await response.text();
+      console.log("Reservation response text:", responseText);
+      
+      let responseData;
+      try {
+        responseData = responseText ? JSON.parse(responseText) : {};
+      } catch (parseError) {
+        console.error("Error parsing response:", parseError);
+        responseData = { message: responseText || "Server returned non-JSON response" };
+      }
+  
+      if (!response.ok) {
+        throw new Error(responseData.message || `Request failed with status ${response.status}`);
+      }
+      
+      // Success - navigate to confirmation page
+      navigate("/booking-confirmed");
+      
     } catch (err) {
-      console.error("Reservation Error:", err)
-      setReservationError(err.message || "Failed to create reservation. Please try again.")
-      setReservationLoading(false)
+      console.error("Reservation Error:", err);
+      setReservationError(err.message || "Failed to create reservation. Please try again.");
+      setReservationLoading(false);
     }
   }
 

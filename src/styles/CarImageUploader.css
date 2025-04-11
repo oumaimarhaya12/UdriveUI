@@ -1,93 +1,92 @@
 .car-image-uploader {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .car-image-uploader h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #1a1b34;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #1a1b34;
-  }
-  
-  .form-group select,
-  .form-group input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-  }
-  
-  .upload-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #605ffa;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .upload-button:hover {
-    background-color: #4b4ad7;
-  }
-  
-  .upload-button:disabled {
-    background-color: #a5a5a5;
-    cursor: not-allowed;
-  }
-  
-  .error-message {
-    padding: 10px;
-    margin-bottom: 20px;
-    background-color: #ffebee;
-    color: #c62828;
-    border-radius: 4px;
-    border-left: 4px solid #c62828;
-  }
-  
-  .success-message {
-    padding: 10px;
-    margin-bottom: 20px;
-    background-color: #e8f5e9;
-    color: #2e7d32;
-    border-radius: 4px;
-    border-left: 4px solid #2e7d32;
-  }
-  
-  .preview-section {
-    margin-top: 30px;
-    text-align: center;
-  }
-  
-  .preview-section h3 {
-    margin-bottom: 10px;
-    color: #1a1b34;
-  }
-  
-  .preview-section img {
-    max-width: 100%;
-    max-height: 300px;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.car-image-uploader h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #1a1b34;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #1a1b34;
+}
+
+.form-group select,
+.form-group input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.upload-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #605ffa;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.upload-button:hover {
+  background-color: #4b4ad7;
+}
+
+.upload-button:disabled {
+  background-color: #a5a5a5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #ffebee;
+  color: #c62828;
+  border-radius: 4px;
+  border-left: 4px solid #c62828;
+}
+
+.success-message {
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border-radius: 4px;
+  border-left: 4px solid #2e7d32;
+}
+
+.preview-section {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.preview-section h3 {
+  margin-bottom: 10px;
+  color: #1a1b34;
+}
+
+.preview-section img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+

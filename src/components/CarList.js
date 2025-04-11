@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Fuel, Settings, Tag } from "lucide-react"
+import { Fuel, Settings, Tag, Users } from "lucide-react"
 import "../styles/CarList.css"
 
 const CarList = ({ filters }) => {
@@ -25,13 +25,13 @@ const CarList = ({ filters }) => {
         const response = await fetch(
           `https://localhost:8084/api/client/GetCars?pickupDate=${bookingData.pickupDate}T${bookingData.pickupTime}`,
           {
-            mode: 'cors',
-            credentials: 'include',
+            mode: "cors",
+            credentials: "include",
             headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        );
+              "Content-Type": "application/json",
+            },
+          },
+        )
 
         if (!response.ok) {
           throw new Error("Failed to fetch available cars")
@@ -97,15 +97,15 @@ const CarList = ({ filters }) => {
     if (!car.imageData) {
       return "/placeholder.svg?height=300&width=600"
     }
-    
-    if (car.imageData.startsWith('http')) {
+
+    if (car.imageData.startsWith("http")) {
       return car.imageData
     }
-    
-    if (car.imageData.startsWith('data:image')) {
+
+    if (car.imageData.startsWith("data:image")) {
       return car.imageData
     }
-    
+
     try {
       return `data:image/jpeg;base64,${car.imageData}`
     } catch (error) {
@@ -140,15 +140,19 @@ const CarList = ({ filters }) => {
       <div className="car-list">
         {filteredCars.map((car, index) => (
           <div key={car.idCar || index} className="car-card">
-            <div className="car-image" style={{ width: "350px", height: "200px" }}>
-              <img src={getCarImageSrc(car)} alt={car.model || "Car"}    />
+            <div className="car-image">
+              <img src={getCarImageSrc(car) || "/placeholder.svg"} alt={`${car.make || ""} ${car.model || "Car"}`} />
             </div>
             <div className="car-details">
-              <h3 className="car-model">{car.model || "Unknown Model"}</h3>
-
-              <div className="car-price-container">
-                <span className="price">{car.price || 0} MAD</span>
-                <span className="price-period">per day</span>
+              <div className="car-header">
+                <h3 className="car-name">
+                  <span className="car-make">{car.make || ""}</span>
+                  <span className="car-model">{car.model || "Unknown Model"}</span>
+                </h3>
+                <div className="car-price-container">
+                  <span className="price">{car.price || 0} MAD</span>
+                  <span className="price-period">per day</span>
+                </div>
               </div>
 
               <div className="car-specs-container">
@@ -164,6 +168,12 @@ const CarList = ({ filters }) => {
                   <Tag size={16} className="spec-icon" />
                   <span>{car.category || "Standard"}</span>
                 </div>
+                {car.seats && (
+                  <div className="spec-item">
+                    <Users size={16} className="spec-icon" />
+                    <span>{car.seats} Seats</span>
+                  </div>
+                )}
               </div>
 
               <button className="view-details-btn" onClick={() => handleViewDetails(car)}>
