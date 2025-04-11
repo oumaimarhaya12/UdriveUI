@@ -23,8 +23,15 @@ const CarList = ({ filters }) => {
         }
 
         const response = await fetch(
-          `https://localhost:8084/api/Cars?pickupDate=${bookingData.pickupDate}T${bookingData.pickupTime}`,
-        )
+          `https://localhost:8084/api/client/GetCars?pickupDate=${bookingData.pickupDate}T${bookingData.pickupTime}`,
+          {
+            mode: 'cors',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch available cars")
@@ -68,7 +75,6 @@ const CarList = ({ filters }) => {
         })
       }
 
-      // Apply category filter
       if (filters?.categories && filters.categories.length > 0) {
         result = result.filter((car) => {
           const category = (car.category || "").toLowerCase()
@@ -83,10 +89,29 @@ const CarList = ({ filters }) => {
   }, [cars, filters])
 
   const handleViewDetails = (car) => {
-    // Save the selected car to sessionStorage for access on the details page
     sessionStorage.setItem("selectedCar", JSON.stringify(car))
-    // Navigate using window.location
     window.location.href = `/car-details/${car.idCar || "default"}`
+  }
+
+  const getCarImageSrc = (car) => {
+    if (!car.imageData) {
+      return "/placeholder.svg?height=300&width=600"
+    }
+    
+    if (car.imageData.startsWith('http')) {
+      return car.imageData
+    }
+    
+    if (car.imageData.startsWith('data:image')) {
+      return car.imageData
+    }
+    
+    try {
+      return `data:image/jpeg;base64,${car.imageData}`
+    } catch (error) {
+      console.error("Error formatting car image:", error)
+      return "/placeholder.svg?height=240&width=300"
+    }
   }
 
   if (loading) {
@@ -115,14 +140,14 @@ const CarList = ({ filters }) => {
       <div className="car-list">
         {filteredCars.map((car, index) => (
           <div key={car.idCar || index} className="car-card">
-            <div className="car-image">
-              <img src={car.imageUrl || "/placeholder.svg?height=240&width=300"} alt={car.model || "Car"} />
+            <div className="car-image" style={{ width: "350px", height: "200px" }}>
+              <img src={getCarImageSrc(car)} alt={car.model || "Car"}    />
             </div>
             <div className="car-details">
-              {/* Removed car name h3 element */}
+              <h3 className="car-model">{car.model || "Unknown Model"}</h3>
 
               <div className="car-price-container">
-                <span className="price">{car.price || 0}MAD</span>
+                <span className="price">{car.price || 0} MAD</span>
                 <span className="price-period">per day</span>
               </div>
 
@@ -153,4 +178,3 @@ const CarList = ({ filters }) => {
 }
 
 export default CarList
-

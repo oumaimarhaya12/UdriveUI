@@ -23,12 +23,14 @@ const CarDetailsComponent = ({ carId }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [bookingData, setBookingData] = useState(null)
+  const [reservationLoading, setReservationLoading] = useState(false)
+  const [reservationError, setReservationError] = useState(null)
 
   useEffect(() => {
     // Define fetchCarDetails inside useEffect to fix the dependency warning
     const fetchCarDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:8084/api/Cars/${carId}`)
+        const response = await fetch(`https://localhost:8084/api/Cars/${carId}`)
 
         if (!response.ok) {
           throw new Error("Failed to fetch car details")
@@ -80,19 +82,83 @@ const CarDetailsComponent = ({ carId }) => {
     const days = calculateDays()
     return (car.price || 0) * days
   }
+  const getCarImageSrc = (car) => {
+    if (!car.imageData) {
+      return "/placeholder.svg?height=300&width=600"
+    }
+    
+    if (car.imageData.startsWith('http')) {
+      return car.imageData
+    }
+    
+    if (car.imageData.startsWith('data:image')) {
+      return car.imageData
+    }
+    
+    try {
+      return `data:image/jpeg;base64,${car.imageData}`
+    } catch (error) {
+      console.error("Error formatting car image:", error)
+      return "/placeholder.svg?height=240&width=300"
+    }
+  }
 
-  const handleConfirmBooking = () => {
-    // Check if user is logged in by looking for token
+  const handleConfirmBooking = async () => {
     const token = localStorage.getItem("token")
+    console.log(token)
 
     if (!token) {
-      // If not logged in, redirect to login page
-      // Store the intended destination in sessionStorage to redirect after login
       sessionStorage.setItem("redirectAfterLogin", "/booking-confirmed")
       navigate("/login")
-    } else {
-      // If logged in, proceed to booking confirmation
+      return
+    }
+
+    // Create reservation
+    try {
+      setReservationLoading(true)
+      setReservationError(null)
+
+      // Hardcoded values to match the example exactly
+    const reservationData = {
+      puckUpAdress: "Stains Paris, Paris",
+      dropOffAdress: " Champs-Élysées, Paris",
+      pickUpDate: "2025-03-15T14:30:00",
+      dropOffDate: "2025-03-20T18:00:00",
+      idCar: 2,
+      price: 50000,
+      token: token
+    }
+
+    const response = await fetch("https://localhost:8084/api/reservation/addreservation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(reservationData)
+    })
+
+    let responseData;
+    const responseText = await response.text();
+    
+    try {
+      responseData = responseText ? JSON.parse(responseText) : {};
+    } catch (parseError) {
+      console.error("Error parsing response:", parseError);
+      responseData = { message: responseText };
+    }
+
+    if (!response.ok) {
+      throw new Error(response.message || "Failed to create reservation");
+    }
+      if (!response.ok) {
+        throw new Error(responseData.message || "Failed to create reservation");
+      }
       navigate("/booking-confirmed")
+    } catch (err) {
+      console.error("Reservation Error:", err)
+      setReservationError(err.message || "Failed to create reservation. Please try again.")
+      setReservationLoading(false)
     }
   }
 
@@ -121,7 +187,7 @@ const CarDetailsComponent = ({ carId }) => {
           <div className="car-details-content">
             <div className="car-details-main">
               <div className="car-details-image">
-                <img src={car.imageUrl || "/placeholder.svg?height=400&width=600"} alt={car.model} />
+                <img src={getCarImageSrc(car)} alt={car.model} />
               </div>
 
               <div className="car-details-info">
@@ -215,9 +281,16 @@ const CarDetailsComponent = ({ carId }) => {
                     <span>{calculateTotalPrice()} MAD</span>
                   </div>
                 </div>
-                <button className="confirm-btn" onClick={handleConfirmBooking}>
-                  Confirm Booking
+                <button 
+                  className="confirm-btn" 
+                  onClick={handleConfirmBooking}
+                  disabled={reservationLoading}
+                >
+                  {reservationLoading ? "Processing..." : "Confirm Booking"}
                 </button>
+                {reservationError && (
+                  <div className="error-message">{reservationError}</div>
+                )}
               </div>
             )}
           </div>
@@ -228,4 +301,3 @@ const CarDetailsComponent = ({ carId }) => {
 }
 
 export default CarDetailsComponent
-
