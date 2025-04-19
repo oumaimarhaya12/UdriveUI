@@ -45,23 +45,25 @@ const LoginForm = () => {
 
       return () => clearTimeout(timer)
     } else if (redirectCountdown === 0 && successMessage) {
-      // Check if there's a stored redirect destination
-      const redirectPath = sessionStorage.getItem("redirectAfterLogin")
       const role = localStorage.getItem("userRole")
-      
+
       console.log("Redirect countdown complete. Role from localStorage:", role)
 
-      if (redirectPath) {
-        // Clear the stored redirect path
-        sessionStorage.removeItem("redirectAfterLogin")
-        console.log("Redirecting to stored path:", redirectPath)
-        navigate(redirectPath)
+      // Always redirect admin users to dashboard
+      if (role === "ADMIN") {
+        console.log("Role is ADMIN, redirecting to dashboard")
+        navigate("/dashboard")
       } else {
-        // Default navigation based on role
-        if (role === "ADMIN") {
-          console.log("Role is ADMIN, redirecting to dashboard")
-          navigate("/dashboard")
+        // For non-admin users, check if there's a stored redirect destination
+        const redirectPath = sessionStorage.getItem("redirectAfterLogin")
+
+        if (redirectPath) {
+          // Clear the stored redirect path
+          sessionStorage.removeItem("redirectAfterLogin")
+          console.log("Redirecting to stored path:", redirectPath)
+          navigate(redirectPath)
         } else {
+          // Default navigation for clients
           console.log("Role is CLIENT, redirecting to home")
           navigate("/")
         }
@@ -106,32 +108,35 @@ const LoginForm = () => {
       // Store the token in localStorage
       const token = data.token || data.accessToken
       localStorage.setItem("token", token)
-      
+
       // Store email for reference
       localStorage.setItem("userEmail", email)
 
       // Determine role based on the response format
       let role = "CLIENT" // Default role
-      
+
       // Check for role_id in the response
       if (data.roles && Array.isArray(data.roles)) {
         console.log("Roles from response:", data.roles)
         // Check if roles contains role_id=1 (admin)
-        if (data.roles.includes(1) || data.roles.includes("1") || 
-            data.roles.includes("ROLE_ADMIN") || data.roles.includes("ADMIN")) {
+        if (
+          data.roles.includes(1) ||
+          data.roles.includes("1") ||
+          data.roles.includes("ROLE_ADMIN") ||
+          data.roles.includes("ADMIN")
+        ) {
           role = "ADMIN"
         }
       }
-      
+
       // Check if there's a single role field
       if (data.role) {
         console.log("Role from response:", data.role)
-        if (data.role === 1 || data.role === "1" || 
-            data.role === "ROLE_ADMIN" || data.role === "ADMIN") {
+        if (data.role === 1 || data.role === "1" || data.role === "ROLE_ADMIN" || data.role === "ADMIN") {
           role = "ADMIN"
         }
       }
-      
+
       // Check if the user object has a role_id
       if (data.user && data.user.role_id) {
         console.log("User role_id from response:", data.user.role_id)
@@ -139,15 +144,15 @@ const LoginForm = () => {
           role = "ADMIN"
         }
       }
-      
+
       // Special case for admin email
       if (email === "admin@udrive.com") {
         console.log("Admin email detected, forcing ADMIN role")
         role = "ADMIN"
       }
-      
+
       console.log("Final determined role:", role)
-      
+
       // Store user role in localStorage
       localStorage.setItem("userRole", role)
 
@@ -160,15 +165,16 @@ const LoginForm = () => {
         setCurrentUser(userObj)
       }
 
-      // Check if there's a redirect path
-      const redirectPath = sessionStorage.getItem("redirectAfterLogin")
-
-      // Set success message and start countdown
-      if (redirectPath) {
-        setSuccessMessage(`Login successful! Redirecting you back...`)
+      // Set success message based on role
+      if (role === "ADMIN") {
+        setSuccessMessage(`Login successful! Redirecting to dashboard...`)
       } else {
-        const destination = role === "ADMIN" ? "dashboard" : "home page"
-        setSuccessMessage(`Login successful! Redirecting to ${destination}...`)
+        const redirectPath = sessionStorage.getItem("redirectAfterLogin")
+        if (redirectPath) {
+          setSuccessMessage(`Login successful! Redirecting you back...`)
+        } else {
+          setSuccessMessage(`Login successful! Redirecting to home page...`)
+        }
       }
 
       setRedirectCountdown(2)
@@ -197,19 +203,20 @@ const LoginForm = () => {
 
         console.log("Google sign-in successful, role:", role)
 
-        // Check if there's a redirect path
-        const redirectPath = sessionStorage.getItem("redirectAfterLogin")
-
-        if (redirectPath) {
-          // Clear the stored redirect path
-          sessionStorage.removeItem("redirectAfterLogin")
-          console.log("Redirecting to:", redirectPath)
-          navigate(redirectPath)
+        // Always redirect admin users to dashboard
+        if (role === "ADMIN") {
+          navigate("/dashboard")
         } else {
-          // Navigate based on role
-          if (role === "ADMIN") {
-            navigate("/dashboard") // Changed from "/admin" to "/dashboard"
+          // For non-admin users, check if there's a stored redirect destination
+          const redirectPath = sessionStorage.getItem("redirectAfterLogin")
+
+          if (redirectPath) {
+            // Clear the stored redirect path
+            sessionStorage.removeItem("redirectAfterLogin")
+            console.log("Redirecting to:", redirectPath)
+            navigate(redirectPath)
           } else {
+            // Default navigation for clients
             navigate("/")
           }
         }

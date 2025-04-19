@@ -1,16 +1,18 @@
 "use client"
-import "../styles/TabsComponent.css"
+
+import "../styles/dashboard.css"
 
 const TabsComponent = ({ activeTab, setActiveTab, tabs }) => {
   return (
-    <div className="tabs">
+    <div className="modern-tabs">
       {tabs.map((tab) => (
         <button
           key={tab.id}
-          className={`tab ${activeTab === tab.id ? "active" : ""}`}
+          className={`modern-tab ${activeTab === tab.id ? "active" : ""}`}
           onClick={() => setActiveTab(tab.id)}
         >
           {tab.label}
+          {activeTab === tab.id && <div className="tab-indicator"></div>}
         </button>
       ))}
     </div>
@@ -18,4 +20,3 @@ const TabsComponent = ({ activeTab, setActiveTab, tabs }) => {
 }
 
 export default TabsComponent
-

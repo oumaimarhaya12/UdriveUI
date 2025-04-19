@@ -1,6 +1,6 @@
 "use client"
-import { MapPin, Calendar, Car, CheckCircle, XCircle } from "lucide-react"
-import "../styles/ReservationsTable.css"
+import { MapPin, Calendar, Car, CheckCircle, XCircle, XSquare, User } from "lucide-react"
+import "../styles/dashboard.css"
 
 const ReservationsTable = ({
   reservations,
@@ -8,6 +8,7 @@ const ReservationsTable = ({
   activeTab,
   handleApproveReservation,
   handleRejectReservation,
+  handleCancelReservation,
   formatDate,
 }) => {
   if (isLoading) {
@@ -33,6 +34,11 @@ const ReservationsTable = ({
     )
   }
 
+  // Log the first reservation to see its structure (if available)
+  if (reservations.length > 0) {
+    console.log("First reservation structure:", JSON.stringify(reservations[0], null, 2))
+  }
+
   // Debug the reservations data
   console.log("Reservations in table:", reservations)
 
@@ -42,89 +48,107 @@ const ReservationsTable = ({
         <thead>
           <tr>
             <th>ID</th>
-            <th>Client</th>
+            {activeTab === "pending" && <th>Client</th>}
             <th>Vehicle</th>
-            <th>Pickup Date</th>
-            <th>Return Date</th>
-            <th>Pickup Location</th>
-            <th>Return Location</th>
-            <th>Price</th>
-            {activeTab === "pending" && <th>Actions</th>}
+            <th>From</th>
+            <th>To</th>
+            <th>Pickup</th>
+            <th>Return</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {reservations.map((reservation) => {
+          {reservations.map((reservation, index) => {
             // Debug each reservation
             console.log("Rendering reservation:", reservation)
 
-            // Use either id or idReservation, whichever is available
-            const reservationId = reservation.id || reservation.idReservation
+            // Use either id or idReservation, whichever is available, or fall back to index
+            const reservationId = reservation.id || reservation.idReservation || index + 1
 
             return (
               <tr key={reservationId}>
                 <td>{reservationId}</td>
-                <td className="client-name">{reservation.clientName}</td>
+                {activeTab === "pending" && (
+                  <td className="client-name">
+                    <div className="client-info">
+                      <User className="icon" />
+                      <span>{reservation.clientName || "Unknown Client"}</span>
+                    </div>
+                  </td>
+                )}
                 <td>
                   <div className="vehicle-info">
                     <Car className="icon" />
                     <span>
                       {reservation.carBrand && reservation.carModel
                         ? `${reservation.carBrand} ${reservation.carModel}`
-                        : reservation.carModel || reservation.carBrand || "Vehicle information not available"}
+                        : reservation.carModel || reservation.carBrand || "Unknown Vehicle"}
                     </span>
                   </div>
                 </td>
                 <td>
-                  <div className="date-info">
-                    <Calendar className="icon" />
-                    <span>{formatDate(reservation.pickupDate)}</span>
-                  </div>
-                </td>
-                <td>
-                  <div className="date-info">
-                    <Calendar className="icon" />
-                    <span>{formatDate(reservation.dropoffDate)}</span>
+                  <div className="location-info">
+                    <MapPin className="icon" />
+                    <span>{reservation.pickupAdress || "No pickup location"}</span>
                   </div>
                 </td>
                 <td>
                   <div className="location-info">
                     <MapPin className="icon" />
-                    <span>{reservation.pickupAdress}</span>
+                    <span>{reservation.dropoffAdress || "No dropoff location"}</span>
                   </div>
                 </td>
                 <td>
-                  <div className="location-info">
-                    <MapPin className="icon" />
-                    <span>{reservation.dropoffAdress}</span>
+                  <div className="date-info">
+                    <Calendar className="icon" />
+                    <span>{reservation.pickupDate ? formatDate(reservation.pickupDate) : "Not specified"}</span>
                   </div>
                 </td>
-                <td className="price">{reservation.price.toFixed(2)} MAD</td>
-                {activeTab === "pending" && (
-                  <td>
-                    <div className="action-buttons">
+                <td>
+                  <div className="date-info">
+                    <Calendar className="icon" />
+                    <span>{reservation.dropoffDate ? formatDate(reservation.dropoffDate) : "Not specified"}</span>
+                  </div>
+                </td>
+                <td>
+                  <div className="action-buttons">
+                    {activeTab === "pending" ? (
+                      <>
+                        <button
+                          className="confirm-button"
+                          onClick={() => {
+                            console.log("Confirm button clicked for ID:", reservationId)
+                            handleApproveReservation(reservationId)
+                          }}
+                        >
+                          <CheckCircle size={16} />
+                          Confirm
+                        </button>
+                        <button
+                          className="decline-button"
+                          onClick={() => {
+                            console.log("Decline button clicked for ID:", reservationId)
+                            handleRejectReservation(reservationId)
+                          }}
+                        >
+                          <XCircle size={16} />
+                          Decline
+                        </button>
+                      </>
+                    ) : (
                       <button
-                        className="confirm-button"
+                        className="cancel-button"
                         onClick={() => {
-                          console.log("Confirm button clicked for ID:", reservationId)
-                          handleApproveReservation(reservationId)
+                          console.log("Cancel button clicked for ID:", reservationId)
+                          handleCancelReservation(reservationId)
                         }}
                       >
-                        <CheckCircle size={16} />
-                        Confirm
+                        <XSquare size={16} />
+                        Cancel
                       </button>
-                      <button
-                        className="decline-button"
-                        onClick={() => {
-                          console.log("Decline button clicked for ID:", reservationId)
-                          handleRejectReservation(reservationId)
-                        }}
-                      >
-                        <XCircle size={16} />
-                        Decline
-                      </button>
-                    </div>
-                  </td>
-                )}
+                    )}
+                  </div>
+                </td>
               </tr>
             )
           })}
@@ -135,4 +159,3 @@ const ReservationsTable = ({
 }
 
 export default ReservationsTable
-

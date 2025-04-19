@@ -302,15 +302,23 @@ const BookingConfirmed = () => {
 
               <div className="car-summary">
                 <div className="car-image">
-                  <img src={car.imageUrl || "/placeholder.svg?height=200&width=300"} alt={car.model} />
+                  {/* Updated to handle different image formats and fallback properly */}
+                  <img
+                    src={
+                      car.imageData
+                        ? `data:image/jpeg;base64,${car.imageData}`
+                        : car.imageUrl || "/placeholder.svg?height=200&width=300"
+                    }
+                    alt={car.model || "Car"}
+                  />
                 </div>
                 <div className="car-info">
-                  <h3>{car.model}</h3>
+                  <h3>{car.model || car.make || "Vehicle"}</h3>
                   <p className="car-category">{car.category}</p>
                   <div className="car-features">
                     <span>{car.transmissionType}</span>
                     <span>{car.fuelType}</span>
-                    <span>{car.seatsNumber} seats</span>
+                    <span>{car.seatsNumber || car.seats || "4"} seats</span>
                     <span>{car.airConditioner ? "A/C" : "No A/C"}</span>
                   </div>
                 </div>
@@ -361,15 +369,7 @@ const BookingConfirmed = () => {
                   </p>
                 </div>
               </div>
-              <div className="payment-methods-display">
-                <div className="payment-icon visa"></div>
-                <div className="payment-icon mastercard"></div>
-                <div className="payment-icon amex"></div>
-                <div className="payment-icon paypal"></div>
-                <div className="payment-icon cash">
-                  <span>CASH</span>
-                </div>
-              </div>
+              {/* Removed the payment-methods-display div with the payment icons/squares */}
             </div>
 
             <div className="booking-actions">
@@ -461,4 +461,3 @@ const BookingConfirmed = () => {
 }
 
 export default BookingConfirmed
-

@@ -1,4 +1,4 @@
-import "../styles/DashboardStats.css"
+import "../styles/dashboard.css"
 
 const DashboardStats = ({ stats }) => {
   return (
@@ -14,4 +14,3 @@ const DashboardStats = ({ stats }) => {
 }
 
 export default DashboardStats
-

@@ -1,22 +1,19 @@
 "use client"
+
 import { Home, Car, Calendar, LogOut } from "lucide-react"
 import "../styles/Sidebar.css"
 
 const Sidebar = ({ activeSection, setActiveSection, userRole, currentUser, handleSignOut }) => {
+  // Use a text logo instead of trying to load an image
   return (
     <div className="sidebar">
       <div className="sidebar-inner">
-        {/* Logo at the top */}
+        {/* Text-based logo that always works */}
         <div className="logo-container">
-          <img
-            src="/assets/UdriveLogo.png"
-            alt="Udrive Logo"
-            className="logo"
-            onError={(e) => {
-              e.target.onerror = null
-              e.target.src = "assets/UdriveLogo.png"
-            }}
-          />
+          <div className="text-logo">
+            <span className="text-logo-u">U</span>
+            <span className="text-logo-drive">Drive</span>
+          </div>
         </div>
 
         <nav className="nav-menu">
@@ -57,4 +54,3 @@ const Sidebar = ({ activeSection, setActiveSection, userRole, currentUser, handl
 }
 
 export default Sidebar
-

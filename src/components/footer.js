@@ -1,8 +1,7 @@
-// Footer.js
 import "../styles/footer.css";
 import logo from '../assets/UdriveLogo.png'; // Import the image
 
-import { FaMapMarkerAlt, FaEnvelope, FaPhone } from "react-icons/fa";
+import { MapPin, Mail, Phone } from 'lucide-react';
 import { useEffect, useRef } from "react";
 
 const Footer = () => {
@@ -35,13 +34,13 @@ const Footer = () => {
     <footer className="footer" ref={footerRef}>
       <div className="footer-content">
         <div className="logo-container" ref={logoRef}>
-          <img src={logo} alt="Udrive Logo" className="footer-logo" />
+          <img src={logo || "/placeholder.svg"} alt="Udrive Logo" className="footer-logo" />
         </div>
         
         <div className="contact-container" ref={contactsRef}>
           <div className="contact-item">
             <div className="icon-wrapper">
-              <FaMapMarkerAlt className="icon" />
+              <MapPin size={28} strokeWidth={2} />
             </div>
             <div className="contact-text">
               <p className="label">Address</p>
@@ -51,7 +50,7 @@ const Footer = () => {
 
           <div className="contact-item">
             <div className="icon-wrapper">
-              <FaEnvelope className="icon" />
+              <Mail size={28} strokeWidth={2} />
             </div>
             <div className="contact-text">
               <p className="label">Email</p>
@@ -61,7 +60,7 @@ const Footer = () => {
 
           <div className="contact-item">
             <div className="icon-wrapper">
-              <FaPhone className="icon" />
+              <Phone size={28} strokeWidth={2} />
             </div>
             <div className="contact-text">
               <p className="label">Phone</p>

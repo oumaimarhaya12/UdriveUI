@@ -1,123 +1,172 @@
-/* Sidebar specific styles */
+/* Sidebar with glass effect */
 .sidebar {
-    width: 240px;
-    background-color: #ffffff;
-    border-right: 1px solid #e5e7eb;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    position: fixed;
-    z-index: 100;
-    top: 0;
-    left: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Container for all sidebar content with proper padding */
-  .sidebar-inner {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding: 24px 16px;
-  }
-  
-  /* Logo container with fixed height */
-  .logo-container {
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    margin-bottom: 32px;
-  }
-  
-  /* Fixed logo size */
-  .logo {
-    width: 140px;
-    height: auto;
-    max-height: 40px;
-    object-fit: contain;
-  }
-  
-  /* Navigation menu with flex-grow to take available space */
-  .nav-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex-grow: 1;
-    margin-bottom: 16px;
-  }
-  
-  .nav-item {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 12px 16px;
-    border-radius: 8px;
-    border: none;
-    background: transparent;
-    text-align: left;
-    cursor: pointer;
-    color: #9197b3;
-    font-family: "Inter", sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  
-  .nav-item:hover {
-    background-color: #f3f4f6;
-  }
-  
-  .nav-item.active {
-    width: 100%;
-    background: #605ffa;
-    color: #fff;
-  }
-  
-  .nav-icon {
-    width: 20px;
-    height: 20px;
-    min-width: 20px; /* Prevent icon from shrinking */
-    margin-right: 12px;
-  }
-  
-  /* Footer with auto margin-top to push to bottom */
-  .sidebar-footer {
-    margin-top: auto;
-    padding-top: 16px;
-    padding-bottom: 16px;
-    border-top: 1px solid #e5e7eb;
-  }
-  
-  /* Sign out button with fixed height */
-  .signout-button {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 46px;
-    padding: 0 16px;
-    border-radius: 8px;
-    border: 1px solid #e5e7eb;
-    background: white;
-    text-align: left;
-    cursor: pointer;
-    color: #ef4444;
-    font-weight: 500;
-    transition: background-color 0.2s;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  }
-  
-  .signout-button:hover {
-    background-color: #fef2f2;
-  }
-  
-  .signout-icon {
-    width: 20px;
-    height: 20px;
-    min-width: 20px; /* Prevent icon from shrinking */
-    margin-right: 12px;
-  }
-  
-  
+  width: 240px;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+/* Container for all sidebar content with proper padding */
+.sidebar-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 24px 16px;
+}
+
+/* Logo container with fixed height */
+.logo-container {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 32px;
+}
+
+/* Text-based logo styling */
+.text-logo {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: -0.5px;
+}
+
+.text-logo-u {
+  color: #6366f1;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  font-weight: 800;
+}
+
+.text-logo-drive {
+  color: #111827;
+  margin-left: 1px;
+}
+
+/* Navigation menu with flex-grow to take available space */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-grow: 1;
+  margin-bottom: 16px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  color: #6b7280;
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #111827;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item.active {
+  width: 100%;
+  background: rgba(99, 102, 241, 0.9);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.nav-item.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #4f46e5;
+  border-radius: 2px;
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  min-width: 20px; /* Prevent icon from shrinking */
+  margin-right: 12px;
+  transition: transform 0.3s ease;
+}
+
+.nav-item:hover .nav-icon {
+  transform: scale(1.1);
+}
+
+/* Footer with auto margin-top to push to bottom */
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  border-top: 1px solid rgba(229, 231, 235, 0.3);
+}
+
+/* Sign out button with fixed height */
+.signout-button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 46px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(229, 231, 235, 0.3);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  text-align: left;
+  cursor: pointer;
+  color: #ef4444;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.signout-button:hover {
+  background-color: rgba(254, 242, 242, 0.7);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.15);
+}
+
+.signout-icon {
+  width: 20px;
+  height: 20px;
+  min-width: 20px; /* Prevent icon from shrinking */
+  margin-right: 12px;
+  transition: transform 0.3s ease;
+}
+
+.signout-button:hover .signout-icon {
+  transform: scale(1.1);
+}
