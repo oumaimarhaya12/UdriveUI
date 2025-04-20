@@ -7,6 +7,19 @@ export function useReservations() {
   const [confirmedReservations, setConfirmedReservations] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [apiError, setApiError] = useState(null)
+  const [debugLogs, setDebugLogs] = useState([])
+
+  // Helper function to add debug logs
+  const addDebugLog = useCallback((message, data = null) => {
+    const timestamp = new Date().toISOString()
+    const logEntry = {
+      timestamp,
+      message,
+      data: data ? JSON.stringify(data) : null,
+    }
+    console.log(`[${timestamp}] ${message}`, data || "")
+    setDebugLogs((prev) => [...prev, logEntry])
+  }, [])
 
   // Helper function to handle empty or invalid data
   const handleEmptyOrInvalidData = useCallback(() => {
@@ -135,6 +148,7 @@ export function useReservations() {
     try {
       setIsLoading(true)
       setApiError(null)
+      addDebugLog("Starting fetchReservations")
 
       // Get the authentication token
       const token = localStorage.getItem("token")
@@ -148,13 +162,13 @@ export function useReservations() {
       // Fetch pending reservations
       const pendingUrl = `${apiBaseUrl}/api/reservation/pendingReservations`
 
-      console.log("Fetching pending reservations from API...")
+      addDebugLog("Fetching pending reservations from API", { url: pendingUrl })
 
       // Try different token formats
       const pendingResult = await tryDifferentTokenFormats(pendingUrl)
 
       if (pendingResult.success) {
-        console.log("Successfully fetched pending reservations with format:", pendingResult.format)
+        addDebugLog("Successfully fetched pending reservations", { format: pendingResult.format })
         const data = pendingResult.data
 
         if (Array.isArray(data)) {
@@ -190,7 +204,7 @@ export function useReservations() {
             }
           })
 
-          console.log("Processed pending reservation data:", processedData)
+          addDebugLog("Processed pending reservation data", { count: processedData.length })
           setPendingReservations(processedData)
         } else {
           console.warn("API returned invalid data format for pending reservations:", data)
@@ -205,12 +219,12 @@ export function useReservations() {
       // Fetch confirmed reservations
       const confirmedUrl = `${apiBaseUrl}/api/reservation/confirmedReservations`
 
-      console.log("Fetching confirmed reservations from API...")
+      addDebugLog("Fetching confirmed reservations from API", { url: confirmedUrl })
 
       const confirmedResult = await tryDifferentTokenFormats(confirmedUrl)
 
       if (confirmedResult.success) {
-        console.log("Successfully fetched confirmed reservations")
+        addDebugLog("Successfully fetched confirmed reservations")
         const data = confirmedResult.data
 
         if (Array.isArray(data)) {
@@ -243,7 +257,7 @@ export function useReservations() {
             }
           })
 
-          console.log("Processed confirmed reservation data:", processedData)
+          addDebugLog("Processed confirmed reservation data", { count: processedData.length })
           setConfirmedReservations(processedData)
         } else {
           console.warn("API returned invalid data format for confirmed reservations")
@@ -261,14 +275,15 @@ export function useReservations() {
     } finally {
       setIsLoading(false)
     }
-  }, [handleEmptyOrInvalidData, tryDifferentTokenFormats])
+  }, [handleEmptyOrInvalidData, tryDifferentTokenFormats, addDebugLog])
 
   const handleApproveReservation = useCallback(
     async (reservationId) => {
       try {
         setIsLoading(true)
 
-        console.log("Received reservation ID:", reservationId, "Type:", typeof reservationId)
+        addDebugLog("=== Starting Reservation Approval Process ===")
+        addDebugLog("Received reservation ID", { id: reservationId, type: typeof reservationId })
 
         // Check if reservationId is valid
         if (reservationId === undefined || reservationId === null) {
@@ -282,7 +297,7 @@ export function useReservations() {
           throw new Error(`Invalid reservation ID: Cannot convert "${reservationId}" to a number`)
         }
 
-        console.log(`Approving reservation with ID: ${id}`)
+        addDebugLog(`Approving reservation with ID: ${id}`)
 
         // Find the reservation in the pending list to get all details
         const reservationToApprove = pendingReservations.find((res) => res.id === id || res.idReservation === id)
@@ -291,7 +306,7 @@ export function useReservations() {
           throw new Error(`Reservation with ID ${id} not found in pending list`)
         }
 
-        console.log("Found reservation to approve:", reservationToApprove)
+        addDebugLog("Found reservation to approve", reservationToApprove)
 
         const token = localStorage.getItem("token")
         if (!token) {
@@ -301,15 +316,15 @@ export function useReservations() {
         const apiBaseUrl = "https://localhost:8084"
         const url = `${apiBaseUrl}/api/reservation/validateReservation/${id}`
 
-        console.log(`Calling API endpoint: ${url}`)
+        addDebugLog(`Calling API endpoint`, { url, method: "PUT" })
 
         // Try different token formats
         const result = await tryDifferentTokenFormats(url, "PUT")
 
         if (result.success) {
-          console.log("API call successful:", result.data)
+          addDebugLog("API call successful", result.data)
 
-          // Remove from pending list
+          // Remove from pending list immediately
           setPendingReservations((prev) => prev.filter((res) => res.id !== id && res.idReservation !== id))
 
           // Add to confirmed list with status changed to "Confirmed"
@@ -321,28 +336,36 @@ export function useReservations() {
           setConfirmedReservations((prev) => [...prev, confirmedReservation])
 
           // Show success message with toast
-          console.log(`Reservation #${id} for ${reservationToApprove.clientName} has been confirmed successfully.`)
+          addDebugLog(`Reservation #${id} for ${reservationToApprove.clientName} has been confirmed successfully.`)
+          addDebugLog("=== Reservation Approval Process Completed Successfully ===")
 
-          // Refresh the data to ensure we have the latest state
-          fetchReservations()
+          // Fetch reservations to ensure our state is in sync with the backend
+          setTimeout(() => {
+            fetchReservations()
+          }, 1000)
+
+          return { success: true, message: `Reservation #${id} confirmed successfully.` }
         } else {
-          console.error("API call failed:", result.results)
+          addDebugLog("API call failed", result.results, "error")
+          addDebugLog("=== Reservation Approval Process Failed ===", null, "error")
           throw new Error(`Failed to approve reservation: ${result.results[0]?.error || "Unknown error"}`)
         }
       } catch (error) {
         console.error(`Error approving reservation:`, error)
-        console.log("Error Approving Reservation", error.message)
+        addDebugLog("Error Approving Reservation", { error: error.message }, "error")
+        return { success: false, error: error.message }
       } finally {
         setIsLoading(false)
       }
     },
-    [pendingReservations, fetchReservations, tryDifferentTokenFormats],
+    [pendingReservations, tryDifferentTokenFormats, addDebugLog, fetchReservations],
   )
 
   const handleRejectReservation = useCallback(
     async (reservationId) => {
       try {
         setIsLoading(true)
+        addDebugLog("Starting reservation rejection process", { id: reservationId })
 
         // Check if reservationId is valid
         if (!reservationId) {
@@ -369,39 +392,46 @@ export function useReservations() {
         }
 
         const apiBaseUrl = "https://localhost:8084"
-        const url = `${apiBaseUrl}/api/reservation/rejectReservation/${id}`
+        // Use the new declineReservation endpoint
+        const url = `${apiBaseUrl}/api/reservation/declineReservation/${id}`
+
+        addDebugLog("Calling decline API endpoint", { url, method: "PUT" })
 
         // Try different token formats
         const result = await tryDifferentTokenFormats(url, "PUT")
 
         if (result.success) {
-          console.log(`Reservation #${id} has been rejected.`)
-          fetchReservations()
-        } else {
-          // If the endpoint doesn't exist yet, show a mock success message
-          console.warn("Reject endpoint may not exist yet or all token formats failed, showing mock success")
+          addDebugLog(`Reservation #${id} has been declined.`, result.data)
 
-          // Remove from pending list
+          // Remove from pending list immediately
           setPendingReservations((prev) => prev.filter((res) => res.id !== id && res.idReservation !== id))
 
-          console.log(`Reservation #${id} has been rejected (simulated).`)
+          // Fetch reservations to ensure our state is in sync with the backend
+          setTimeout(() => {
+            fetchReservations()
+          }, 1000)
+
+          return { success: true, message: `Reservation #${id} declined successfully.` }
+        } else {
+          addDebugLog("API call failed", result.results, "error")
+          throw new Error(`Failed to decline reservation: ${result.results[0]?.error || "Unknown error"}`)
         }
       } catch (error) {
-        console.error(`Error rejecting reservation:`, error)
-        console.log("Error Rejecting Reservation", error.message)
+        console.error(`Error declining reservation:`, error)
+        addDebugLog("Error Declining Reservation", { error: error.message }, "error")
+        return { success: false, error: error.message }
       } finally {
         setIsLoading(false)
       }
     },
-    [pendingReservations, fetchReservations, tryDifferentTokenFormats],
+    [pendingReservations, tryDifferentTokenFormats, addDebugLog, fetchReservations],
   )
 
   const handleCancelReservation = useCallback(
     async (reservationId) => {
       try {
         setIsLoading(true)
-
-        console.log("Received reservation ID to cancel:", reservationId, "Type:", typeof reservationId)
+        addDebugLog("Starting reservation cancellation process", { id: reservationId })
 
         // Check if reservationId is valid
         if (reservationId === undefined || reservationId === null) {
@@ -415,7 +445,7 @@ export function useReservations() {
           throw new Error(`Invalid reservation ID: Cannot convert "${reservationId}" to a number`)
         }
 
-        console.log(`Canceling reservation with ID: ${id}`)
+        addDebugLog(`Canceling reservation with ID: ${id}`)
 
         // Find the reservation in the confirmed list to get all details
         const reservationToCancel = confirmedReservations.find((res) => res.id === id || res.idReservation === id)
@@ -424,7 +454,7 @@ export function useReservations() {
           throw new Error(`Reservation with ID ${id} not found in confirmed list`)
         }
 
-        console.log("Found reservation to cancel:", reservationToCancel)
+        addDebugLog("Found reservation to cancel", reservationToCancel)
 
         const token = localStorage.getItem("token")
         if (!token) {
@@ -434,34 +464,36 @@ export function useReservations() {
         const apiBaseUrl = "https://localhost:8084"
         const url = `${apiBaseUrl}/api/reservation/cancelReservation/${id}`
 
-        console.log(`Calling API endpoint: ${url}`)
+        addDebugLog(`Calling API endpoint`, { url, method: "PUT" })
 
         // Try different token formats
         const result = await tryDifferentTokenFormats(url, "PUT")
 
         if (result.success) {
-          console.log("API call successful:", result.data)
+          addDebugLog("API call successful", result.data)
 
-          // Remove from confirmed list
+          // Remove from confirmed list immediately
           setConfirmedReservations((prev) => prev.filter((res) => res.id !== id && res.idReservation !== id))
 
-          // Show success message with toast
-          console.log(`Reservation #${id} has been canceled successfully.`)
+          // Fetch reservations to ensure our state is in sync with the backend
+          setTimeout(() => {
+            fetchReservations()
+          }, 1000)
 
-          // Refresh the data to ensure we have the latest state
-          fetchReservations()
+          return { success: true, message: `Reservation #${id} canceled successfully.` }
         } else {
-          console.error("API call failed:", result.results)
+          addDebugLog("API call failed", result.results, "error")
           throw new Error(`Failed to cancel reservation: ${result.results[0]?.error || "Unknown error"}`)
         }
       } catch (error) {
         console.error(`Error canceling reservation:`, error)
-        console.log("Error Canceling Reservation", error.message)
+        addDebugLog("Error Canceling Reservation", { error: error.message }, "error")
+        return { success: false, error: error.message }
       } finally {
         setIsLoading(false)
       }
     },
-    [confirmedReservations, fetchReservations, tryDifferentTokenFormats],
+    [confirmedReservations, tryDifferentTokenFormats, addDebugLog, fetchReservations],
   )
 
   // Debug authentication issues
@@ -548,6 +580,75 @@ export function useReservations() {
     }
   }, [])
 
+  // Add this function to test the API connection
+  const testApiConnection = useCallback(async () => {
+    try {
+      const apiBaseUrl = "https://localhost:8084"
+      const url = `${apiBaseUrl}/api/reservation/pendingReservations`
+
+      console.log("Testing API connection to:", url)
+
+      const result = await tryDifferentTokenFormats(url)
+
+      if (result.success) {
+        console.log("API connection test successful!")
+        return { success: true, message: "API connection test successful" }
+      } else {
+        console.error("API connection test failed:", result.results)
+        return { success: false, error: "API connection test failed" }
+      }
+    } catch (error) {
+      console.error("Error testing API connection:", error)
+      return { success: false, error: error.message }
+    }
+  }, [tryDifferentTokenFormats])
+
+  // Add a direct API call function to test the validateReservation endpoint
+  const testValidateReservation = useCallback(
+    async (reservationId) => {
+      try {
+        addDebugLog("Testing validateReservation endpoint directly", { id: reservationId })
+
+        const apiBaseUrl = "https://localhost:8084"
+        const url = `${apiBaseUrl}/api/reservation/validateReservation/${reservationId}`
+
+        const token = localStorage.getItem("token")
+        if (!token) {
+          throw new Error("No token found")
+        }
+
+        // Try a direct fetch with Bearer token
+        const response = await fetch(url, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        })
+
+        addDebugLog("Direct API call response", {
+          status: response.status,
+          statusText: response.statusText,
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          addDebugLog("Validation successful", data)
+          return { success: true, data }
+        } else {
+          const errorText = await response.text()
+          addDebugLog("Validation failed", { error: errorText }, "error")
+          return { success: false, error: errorText }
+        }
+      } catch (error) {
+        addDebugLog("Error in direct validation test", { error: error.message }, "error")
+        return { success: false, error: error.message }
+      }
+    },
+    [addDebugLog],
+  )
+
   return {
     pendingReservations,
     confirmedReservations,
@@ -559,5 +660,8 @@ export function useReservations() {
     handleRejectReservation,
     handleCancelReservation,
     debugAuthenticationIssue,
+    testApiConnection,
+    testValidateReservation,
+    debugLogs,
   }
 }

@@ -1,7 +1,9 @@
 "use client"
 import { MapPin, Calendar, Car, CheckCircle, XCircle, XSquare, User } from "lucide-react"
 import "../styles/dashboard.css"
+import { useState } from "react"
 
+// Add a check to prevent duplicate action handling
 const ReservationsTable = ({
   reservations,
   isLoading,
@@ -11,6 +13,32 @@ const ReservationsTable = ({
   handleCancelReservation,
   formatDate,
 }) => {
+  // Add state to track which reservations are being processed
+  const [processingIds, setProcessingIds] = useState({})
+
+  // Helper function to handle action with processing state
+  const handleAction = async (id, actionFn) => {
+    if (processingIds[id]) return // Prevent duplicate actions
+
+    console.log(`Starting action for reservation ID: ${id}`)
+    setProcessingIds((prev) => ({ ...prev, [id]: true }))
+
+    try {
+      const result = await actionFn(id)
+      console.log(`Action result:`, result)
+
+      if (result.success) {
+        console.log(`Action completed successfully: ${result.message}`)
+      } else {
+        console.error(`Action failed: ${result.error}`)
+      }
+    } catch (error) {
+      console.error(`Error during action:`, error)
+    } finally {
+      setProcessingIds((prev) => ({ ...prev, [id]: false }))
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="loading-container">
@@ -42,6 +70,7 @@ const ReservationsTable = ({
   // Debug the reservations data
   console.log("Reservations in table:", reservations)
 
+  // Update the action buttons to use the new handler function
   return (
     <div className="table-container">
       <table className="reservations-table">
@@ -64,9 +93,10 @@ const ReservationsTable = ({
 
             // Use either id or idReservation, whichever is available, or fall back to index
             const reservationId = reservation.id || reservation.idReservation || index + 1
+            const isProcessing = processingIds[reservationId]
 
             return (
-              <tr key={reservationId}>
+              <tr key={reservationId} className={isProcessing ? "processing" : ""}>
                 <td>{reservationId}</td>
                 {activeTab === "pending" && (
                   <td className="client-name">
@@ -115,36 +145,33 @@ const ReservationsTable = ({
                     {activeTab === "pending" ? (
                       <>
                         <button
-                          className="confirm-button"
+                          className={`confirm-button ${isProcessing ? "disabled" : ""}`}
                           onClick={() => {
                             console.log("Confirm button clicked for ID:", reservationId)
-                            handleApproveReservation(reservationId)
+                            handleAction(reservationId, handleApproveReservation)
                           }}
+                          disabled={isProcessing}
                         >
-                          <CheckCircle size={16} />
-                          Confirm
+                          {isProcessing ? <span className="loading-dot"></span> : <CheckCircle size={16} />}
+                          {isProcessing ? "Processing..." : "Confirm"}
                         </button>
                         <button
-                          className="decline-button"
-                          onClick={() => {
-                            console.log("Decline button clicked for ID:", reservationId)
-                            handleRejectReservation(reservationId)
-                          }}
+                          className={`decline-button ${isProcessing ? "disabled" : ""}`}
+                          onClick={() => handleAction(reservationId, handleRejectReservation)}
+                          disabled={isProcessing}
                         >
-                          <XCircle size={16} />
-                          Decline
+                          {isProcessing ? <span className="loading-dot"></span> : <XCircle size={16} />}
+                          {isProcessing ? "Processing..." : "Decline"}
                         </button>
                       </>
                     ) : (
                       <button
-                        className="cancel-button"
-                        onClick={() => {
-                          console.log("Cancel button clicked for ID:", reservationId)
-                          handleCancelReservation(reservationId)
-                        }}
+                        className={`cancel-button ${isProcessing ? "disabled" : ""}`}
+                        onClick={() => handleAction(reservationId, handleCancelReservation)}
+                        disabled={isProcessing}
                       >
-                        <XSquare size={16} />
-                        Cancel
+                        {isProcessing ? <span className="loading-dot"></span> : <XSquare size={16} />}
+                        {isProcessing ? "Processing..." : "Cancel"}
                       </button>
                     )}
                   </div>

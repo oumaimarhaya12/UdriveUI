@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Fuel, Settings, Tag, Users } from "lucide-react"
+import { Fuel, Settings, Tag, Users } from 'lucide-react'
 import "../styles/CarList.css"
 
 const CarList = ({ filters }) => {

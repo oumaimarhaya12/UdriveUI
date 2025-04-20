@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Banknote, Fuel, Car, Check } from "lucide-react"
+import { Banknote, Fuel, Car, Check } from 'lucide-react'
 import "../styles/FilterSection.css"
 
 const FilterSection = ({ onFilterChange }) => {
-  const [priceRange, setPriceRange] = useState([0, 45000]) // Updated max price to 45000
+  const [priceRange, setPriceRange] = useState([0, 1500]) // Changed from 45000 to 1500
   const [selectedFuelTypes, setSelectedFuelTypes] = useState([])
   const [selectedCategories, setSelectedCategories] = useState([])
 
@@ -48,6 +48,13 @@ const FilterSection = ({ onFilterChange }) => {
     }
   }
 
+  // Reset all filters
+  const resetFilters = () => {
+    setPriceRange([0, 1500]) // Changed from 45000 to 1500
+    setSelectedFuelTypes([])
+    setSelectedCategories([])
+  }
+
   // Update parent component when filters change
   useEffect(() => {
     if (onFilterChange) {
@@ -61,7 +68,15 @@ const FilterSection = ({ onFilterChange }) => {
 
   return (
     <div className="filter-section">
-      <h2 className="filter-title">Filters</h2>
+      <div className="filter-title-container">
+        <h2 className="filter-title">Filters</h2>
+        <button
+          className="reset-filters-btn"
+          onClick={resetFilters}
+        >
+          Reset Filters
+        </button>
+      </div>
 
       {/* Price Range Filter */}
       <div className="filter-group">
@@ -93,7 +108,7 @@ const FilterSection = ({ onFilterChange }) => {
                   value={priceRange[1]}
                   onChange={(e) => handlePriceChange(e, 1)}
                   min={priceRange[0]}
-                  max="45000"
+                  max="1500" // Changed from 45000 to 1500
                 />
               </div>
             </div>
@@ -102,14 +117,14 @@ const FilterSection = ({ onFilterChange }) => {
             <div
               className="slider-track"
               style={{
-                left: `${(priceRange[0] / 45000) * 100}%`,
-                width: `${((priceRange[1] - priceRange[0]) / 45000) * 100}%`,
+                left: `${(priceRange[0] / 1500) * 100}%`, // Changed from 45000 to 1500
+                width: `${((priceRange[1] - priceRange[0]) / 1500) * 100}%`, // Changed from 45000 to 1500
               }}
             ></div>
             <input
               type="range"
               min="0"
-              max="45000"
+              max="1500" // Changed from 45000 to 1500
               value={priceRange[0]}
               onChange={(e) => handlePriceChange(e, 0)}
               className="price-slider min-slider"
@@ -117,7 +132,7 @@ const FilterSection = ({ onFilterChange }) => {
             <input
               type="range"
               min="0"
-              max="45000"
+              max="1500" // Changed from 45000 to 1500
               value={priceRange[1]}
               onChange={(e) => handlePriceChange(e, 1)}
               className="price-slider max-slider"
@@ -165,21 +180,8 @@ const FilterSection = ({ onFilterChange }) => {
           ))}
         </div>
       </div>
-
-      {/* Reset Filters Button */}
-      <button
-        className="reset-filters-btn"
-        onClick={() => {
-          setPriceRange([0, 45000])
-          setSelectedFuelTypes([])
-          setSelectedCategories([])
-        }}
-      >
-        Reset Filters
-      </button>
     </div>
   )
 }
 
 export default FilterSection
-

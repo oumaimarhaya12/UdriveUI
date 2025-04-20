@@ -1,116 +1,105 @@
 .car-selection-page {
-    min-height: 100vh;
-    background-color: #ffffff;
-    font-family: "Work Sans", sans-serif;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  font-family: "Work Sans", sans-serif;
 }
 
 .content-container {
-    max-width: 1320px;
-    margin: 0 auto;
-    padding: 40px 20px; /* Increased top/bottom padding */
+  max-width: 1200px;
+  margin: 0 0 0 20px;
+  padding: 40px 20px;
+  width: 95%;
 }
 
 .main-content {
-    margin-top: 60px; /* Increased from 24px */
+  margin-top: 40px;
+  width: 100%;
 }
 
-.filter-and-cars {
-    display: flex;
-    gap: 32px; /* Increased from 24px */
-    margin-top: 40px; /* Increased from 24px */
-    margin-bottom: 80px; /* Added bottom margin */
+/* Car content styles */
+.car-content-wrapper {
+  display: flex;
+  gap: 30px;
+  margin-top: 32px;
+  margin-bottom: 80px;
+  width: 100%;
+  max-width: 1200px;
 }
 
-.sidebar {
-    width: 25%;
-    max-width: 300px;
-    flex-shrink: 0;
+.filter-container {
+  width: 300px;
+  flex-shrink: 0;
 }
 
 .car-content {
-    flex: 1;
+  flex: 1;
+  max-width: 900px;
 }
 
 /* Add space after BookingSummary */
 .content-container > div:nth-child(1) {
-    margin-bottom: 60px;
+  margin-bottom: 40px;
 }
 
 /* Add space after PromoBanner */
 .content-container > div:nth-child(2) {
-    margin-bottom: 60px;
+  margin-bottom: 40px;
+  width: 100%;
 }
 
 /* Add space after FilterHeading */
 .main-content > div:first-child {
-    margin-bottom: 40px;
+  margin-bottom: 24px;
 }
 
 /* Responsive adjustments */
 @media (max-width: 1200px) {
-    .content-container {
-        max-width: 960px;
-    }
+  .content-container {
+    max-width: 95%;
+    margin: 0 0 0 20px;
+  }
 }
 
 @media (max-width: 992px) {
-    .content-container {
-        max-width: 720px;
-        padding: 30px 20px; /* Slightly reduced padding */
-    }
-    
-    .sidebar {
-        width: 30%;
-    }
-    
-    .filter-and-cars {
-        margin-bottom: 60px; /* Reduced on smaller screens */
-    }
-    
-    .main-content {
-        margin-top: 50px; /* Slightly reduced */
-    }
+  .car-content-wrapper {
+    flex-direction: column;
+  }
+
+  .filter-container {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+
+  .filter-section {
+    height: auto;
+    padding-bottom: 24px;
+  }
 }
 
 @media (max-width: 768px) {
-    .filter-and-cars {
-        flex-direction: column;
-        margin-top: 30px;
-        margin-bottom: 50px;
-    }
+  .content-container {
+    padding: 25px 15px;
+    margin: 0 0 0 10px;
+  }
 
-    .sidebar {
-        width: 100%;
-        max-width: none;
-        margin-bottom: 40px; /* Increased from 24px */
-    }
+  .main-content {
+    margin-top: 30px;
+  }
 
-    .content-container {
-        max-width: 540px;
-        padding: 25px 15px;
-    }
-    
-    .main-content {
-        margin-top: 40px;
-    }
-    
-    /* Reduce spacing on mobile */
-    .content-container > div:nth-child(1),
-    .content-container > div:nth-child(2) {
-        margin-bottom: 40px;
-    }
+  /* Reduce spacing on mobile */
+  .content-container > div:nth-child(1),
+  .content-container > div:nth-child(2) {
+    margin-bottom: 30px;
+  }
 }
 
 @media (max-width: 576px) {
-    .content-container {
-        padding: 20px 15px;
-    }
-    
-    .filter-and-cars {
-        margin-bottom: 40px;
-    }
-    
-    .main-content {
-        margin-top: 30px;
-    }
+  .content-container {
+    padding: 20px 15px;
+    margin: 0 0 0 5px;
+  }
+
+  .main-content {
+    margin-top: 20px;
+  }
 }

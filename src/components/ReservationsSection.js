@@ -5,7 +5,7 @@ import TabsComponent from "./TabsComponent"
 import ReservationsTable from "./ReservationsTable"
 import ReservationStats from "./ReservationStats"
 import ReservationFilters from "./ReservationFilters"
-import { RefreshCw } from "lucide-react"
+import { RefreshCw, AlertCircle, CheckCircle, Bug } from "lucide-react"
 import "../styles/dashboard.css"
 
 const ReservationsSection = ({
@@ -17,6 +17,9 @@ const ReservationsSection = ({
   handleCancelReservation,
   formatDate,
   fetchReservations,
+  testApiConnection,
+  testValidateReservation,
+  debugLogs,
 }) => {
   const [activeTab, setActiveTab] = useState("pending")
   const [filteredPendingReservations, setFilteredPendingReservations] = useState(pendingReservations)
@@ -28,6 +31,11 @@ const ReservationsSection = ({
     maxPrice: null,
   })
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [apiTestResult, setApiTestResult] = useState(null)
+  const [showApiTestResult, setShowApiTestResult] = useState(false)
+  const [showDebugPanel, setShowDebugPanel] = useState(false)
+  const [directTestId, setDirectTestId] = useState("")
+  const [directTestResult, setDirectTestResult] = useState(null)
 
   // Apply filters whenever the original data or filters change
   useEffect(() => {
@@ -76,12 +84,84 @@ const ReservationsSection = ({
     setFilters(newFilters)
   }
 
+  // Update the handleRefresh function to add a delay before refreshing
   const handleRefresh = async () => {
     setIsRefreshing(true)
     await fetchReservations()
     setTimeout(() => {
       setIsRefreshing(false)
     }, 500) // Add a small delay to make the refresh animation visible
+  }
+
+  // Add these new functions to handle reservation actions with proper feedback
+  const handleConfirmReservation = async (reservationId) => {
+    console.log(`Starting confirmation process for reservation ID: ${reservationId}`)
+    const result = await handleApproveReservation(reservationId)
+
+    if (result.success) {
+      // Success handling - you could add a toast notification here
+      console.log(`✅ ${result.message}`)
+    } else {
+      // Error handling
+      console.error(`❌ ${result.error}`)
+    }
+
+    return result
+  }
+
+  const handleDeclineReservation = async (reservationId) => {
+    const result = await handleRejectReservation(reservationId)
+    if (result.success) {
+      // Success handling
+      console.log(result.message)
+    } else {
+      // Error handling
+      console.error(result.error)
+    }
+    return result
+  }
+
+  const handleCancelConfirmedReservation = async (reservationId) => {
+    const result = await handleCancelReservation(reservationId)
+    if (result.success) {
+      // Success handling
+      console.log(result.message)
+    } else {
+      // Error handling
+      console.error(result.error)
+    }
+    return result
+  }
+
+  const handleTestApiConnection = async () => {
+    setIsRefreshing(true)
+    setShowApiTestResult(true)
+    const result = await testApiConnection()
+    setApiTestResult(result)
+
+    // Auto-hide the result after 5 seconds
+    setTimeout(() => {
+      setShowApiTestResult(false)
+    }, 5000)
+
+    setTimeout(() => {
+      setIsRefreshing(false)
+    }, 500)
+  }
+
+  const handleDirectTest = async () => {
+    if (!directTestId) {
+      setDirectTestResult({
+        success: false,
+        error: "Please enter a reservation ID",
+      })
+      return
+    }
+
+    setIsRefreshing(true)
+    const result = await testValidateReservation(directTestId)
+    setDirectTestResult(result)
+    setIsRefreshing(false)
   }
 
   const tabs = [
@@ -93,11 +173,80 @@ const ReservationsSection = ({
     <div className="reservations-section">
       <div className="modern-header">
         <h2>Reservations</h2>
-        <button className={`modern-refresh ${isRefreshing ? "refreshing" : ""}`} onClick={handleRefresh}>
-          <RefreshCw size={16} />
-          <span>Refresh</span>
-        </button>
+        <div className="header-actions">
+          <button className={`modern-refresh ${isRefreshing ? "refreshing" : ""}`} onClick={handleRefresh}>
+            <RefreshCw size={16} />
+            <span>Refresh</span>
+          </button>
+          {/* Debug button - remove in production */}
+          <button className="api-test-button" onClick={handleTestApiConnection} title="Test API Connection">
+            <span>Test API</span>
+          </button>
+          <button
+            className="debug-button"
+            onClick={() => setShowDebugPanel(!showDebugPanel)}
+            title="Toggle Debug Panel"
+          >
+            <Bug size={16} />
+            <span>Debug</span>
+          </button>
+        </div>
       </div>
+
+      {/* Display API test result */}
+      {showApiTestResult && apiTestResult && (
+        <div className={`api-test-result ${apiTestResult.success ? "success" : "error"}`}>
+          {apiTestResult.success ? (
+            <div className="api-success">
+              <CheckCircle size={16} />
+              <span>{apiTestResult.message}</span>
+            </div>
+          ) : (
+            <div className="api-error">
+              <AlertCircle size={16} />
+              <span>{apiTestResult.error}</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Debug Panel */}
+      {showDebugPanel && (
+        <div className="debug-panel">
+          <h4>Debug Tools</h4>
+          <div className="direct-test">
+            <p>Test validateReservation endpoint directly:</p>
+            <div className="direct-test-controls">
+              <input
+                type="text"
+                placeholder="Reservation ID"
+                value={directTestId}
+                onChange={(e) => setDirectTestId(e.target.value)}
+              />
+              <button onClick={handleDirectTest}>Test</button>
+            </div>
+            {directTestResult && (
+              <div className={`direct-test-result ${directTestResult.success ? "success" : "error"}`}>
+                {directTestResult.success ? (
+                  <pre>{JSON.stringify(directTestResult.data, null, 2)}</pre>
+                ) : (
+                  <p>Error: {directTestResult.error}</p>
+                )}
+              </div>
+            )}
+          </div>
+          <h4>Recent Logs:</h4>
+          <div className="debug-logs">
+            {debugLogs.slice(-5).map((log, index) => (
+              <div key={index} className="log-entry">
+                <span className="log-time">{new Date(log.timestamp).toLocaleTimeString()}</span>
+                <span className="log-message">{log.message}</span>
+                {log.data && <pre className="log-data">{log.data}</pre>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <ReservationStats pendingCount={pendingReservations.length} confirmedCount={confirmedReservations.length} />
 
@@ -117,10 +266,11 @@ const ReservationsSection = ({
             reservations={filteredPendingReservations}
             isLoading={isLoading}
             activeTab={activeTab}
-            handleApproveReservation={handleApproveReservation}
-            handleRejectReservation={handleRejectReservation}
-            handleCancelReservation={handleCancelReservation}
+            handleApproveReservation={handleConfirmReservation}
+            handleRejectReservation={handleDeclineReservation}
+            handleCancelReservation={handleCancelConfirmedReservation}
             formatDate={formatDate}
+            testApiConnection={testApiConnection}
           />
         </>
       )}
@@ -136,10 +286,11 @@ const ReservationsSection = ({
             reservations={filteredConfirmedReservations}
             isLoading={isLoading}
             activeTab={activeTab}
-            handleApproveReservation={handleApproveReservation}
-            handleRejectReservation={handleRejectReservation}
-            handleCancelReservation={handleCancelReservation}
+            handleApproveReservation={handleConfirmReservation}
+            handleRejectReservation={handleDeclineReservation}
+            handleCancelReservation={handleCancelConfirmedReservation}
             formatDate={formatDate}
+            testApiConnection={testApiConnection}
           />
         </>
       )}
