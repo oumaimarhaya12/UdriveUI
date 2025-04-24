@@ -175,7 +175,7 @@ export function useReservations() {
           // Process the data to ensure it has the required fields
           const processedData = data.map((reservation, index) => {
             // Add id field if missing (using index + 1 as fallback)
-            const id = reservation.id || reservation.idReservation || index + 1
+            const id =  reservation.idReservation 
 
             // Extract car information - handle cases where we have model but not brand or vice versa
             let carBrand = reservation.carBrand || ""
@@ -190,10 +190,8 @@ export function useReservations() {
 
             return {
               ...reservation,
-              // Ensure both id and idReservation are present
-              id: id,
-              idReservation: id,
-              // Add any other missing fields with defaults
+              id: reservation.idReservation,
+              idReservation: reservation.idReservation,
               status: reservation.status || "Pending",
               carBrand: carBrand,
               carModel: carModel,
@@ -243,8 +241,8 @@ export function useReservations() {
             }
 
             return {
-              id: index + 1, // Generate an ID since ConfirmedReservationDTO doesn't have one
-              idReservation: index + 1,
+              id: reservation.idReservation, // Generate an ID since ConfirmedReservationDTO doesn't have one
+              idReservation: reservation.idReservation,
               status: "Confirmed",
               carBrand: carBrand,
               carModel: carModel,

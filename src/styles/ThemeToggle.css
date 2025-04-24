@@ -1,0 +1,68 @@
+/* ThemeToggle.css */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .theme-toggle.light {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1e293b;
+  }
+  
+  .theme-toggle:hover {
+    transform: translateY(-2px);
+  }
+  
+  .theme-toggle::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+  }
+  
+  .theme-toggle:hover::before {
+    transform: scale(1);
+  }
+  
+  .theme-toggle.light::before {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  
+  .theme-toggle svg {
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  
+  .theme-toggle:hover svg {
+    transform: rotate(30deg);
+  }
+  
+  .theme-toggle.dark:hover svg {
+    color: #f59e0b;
+  }
+  
+  .theme-toggle.light:hover svg {
+    color: #6160fe;
+  }
+  

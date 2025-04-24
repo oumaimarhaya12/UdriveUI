@@ -109,7 +109,6 @@ const CarsManagement = () => {
     return { success: false, results }
   }
 
-  // Add this function after the tryDifferentTokenFormats function
   // Check token validity
   const checkTokenValidity = () => {
     const token = localStorage.getItem("token")
@@ -188,8 +187,7 @@ const CarsManagement = () => {
     }
   }
 
-  // Update the toggleCarAvailability function to include token validation
-  // Replace the toggleCarAvailability function with this updated version
+  // Fixed toggleCarAvailability function
   const toggleCarAvailability = async (carId) => {
     try {
       setIsLoading(true)
@@ -200,7 +198,16 @@ const CarsManagement = () => {
         throw new Error("Invalid car ID")
       }
 
-      console.log(`Attempting to toggle availability for car: ${carId}`)
+      // Find the car to get the numeric ID
+      const car = cars.find(c => c.idCar === carId || c.model === carId)
+      if (!car) {
+        throw new Error(`Car with identifier ${carId} not found`)
+      }
+
+      // Always use the numeric ID for the API call
+      const numericId = car.idCar
+      
+      console.log(`Attempting to toggle availability for car: ${numericId}`)
 
       // Validate token before making the request
       const tokenStatus = checkTokenValidity()
@@ -208,23 +215,22 @@ const CarsManagement = () => {
         console.error("Token validation failed:", tokenStatus.error)
 
         // Instead of showing an error, update the UI optimistically
-        // This allows the user to continue using the interface even if the API call fails
         setCars((prevCars) =>
-          prevCars.map((car) => {
-            if (car.model === carId || car.idCar === carId) {
-              console.log(`Optimistically updating car ${carId} status from ${car.status} to ${!car.status}`)
-              return { ...car, status: !car.status }
+          prevCars.map((c) => {
+            if (c.idCar === numericId) {
+              console.log(`Optimistically updating car ${numericId} status from ${c.status} to ${!c.status}`)
+              return { ...c, status: !c.status }
             }
-            return car
+            return c
           }),
         )
 
         setFilteredCars((prevCars) =>
-          prevCars.map((car) => {
-            if (car.model === carId || car.idCar === carId) {
-              return { ...car, status: !car.status }
+          prevCars.map((c) => {
+            if (c.idCar === numericId) {
+              return { ...c, status: !c.status }
             }
-            return car
+            return c
           }),
         )
 
@@ -234,7 +240,7 @@ const CarsManagement = () => {
       }
 
       const apiBaseUrl = "https://localhost:8084"
-      const url = `${apiBaseUrl}/api/car/SwitchCarStatus/${carId}`
+      const url = `${apiBaseUrl}/api/car/SwitchCarStatus/${numericId}`
       console.log(`Calling API endpoint: ${url}`)
 
       // Try different token formats
@@ -245,46 +251,46 @@ const CarsManagement = () => {
 
         // Update the car status in the local state
         setCars((prevCars) =>
-          prevCars.map((car) => {
-            if (car.model === carId || car.idCar === carId) {
-              return { ...car, status: !car.status }
+          prevCars.map((c) => {
+            if (c.idCar === numericId) {
+              return { ...c, status: !c.status }
             }
-            return car
+            return c
           }),
         )
 
         // Update filtered cars as well
         setFilteredCars((prevCars) =>
-          prevCars.map((car) => {
-            if (car.model === carId || car.idCar === carId) {
-              return { ...car, status: !car.status }
+          prevCars.map((c) => {
+            if (c.idCar === numericId) {
+              return { ...c, status: !c.status }
             }
-            return car
+            return c
           }),
         )
 
         // Show success notification
-        console.log(`Car status updated successfully for ${carId}`)
+        console.log(`Car status updated successfully for ${numericId}`)
       } else {
         console.error("Failed to toggle car availability:", result.results)
 
         // Even if the API call fails, update the UI optimistically
         setCars((prevCars) =>
-          prevCars.map((car) => {
-            if (car.model === carId || car.idCar === carId) {
-              console.log(`Optimistically updating car ${carId} status from ${car.status} to ${!car.status}`)
-              return { ...car, status: !car.status }
+          prevCars.map((c) => {
+            if (c.idCar === numericId) {
+              console.log(`Optimistically updating car ${numericId} status from ${c.status} to ${!c.status}`)
+              return { ...c, status: !c.status }
             }
-            return car
+            return c
           }),
         )
 
         setFilteredCars((prevCars) =>
-          prevCars.map((car) => {
-            if (car.model === carId || car.idCar === carId) {
-              return { ...car, status: !car.status }
+          prevCars.map((c) => {
+            if (c.idCar === numericId) {
+              return { ...c, status: !c.status }
             }
-            return car
+            return c
           }),
         )
 
