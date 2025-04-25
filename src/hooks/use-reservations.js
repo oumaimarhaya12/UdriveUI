@@ -92,7 +92,6 @@ export function useReservations() {
           credentials: "include",
         }
 
-        // Add body if provided
         if (body) {
           fetchOptions.body = JSON.stringify(body)
         }
@@ -215,7 +214,8 @@ export function useReservations() {
       }
 
       // Fetch confirmed reservations
-      const confirmedUrl = `${apiBaseUrl}/api/reservation/confirmedReservations`
+      const apiBaseUrl1 = "https://localhost:8084"
+      const confirmedUrl = `${apiBaseUrl1}/api/reservation/confirmedReservations`
 
       addDebugLog("Fetching confirmed reservations from API", { url: confirmedUrl })
 
@@ -241,7 +241,7 @@ export function useReservations() {
             }
 
             return {
-              id: reservation.idReservation, // Generate an ID since ConfirmedReservationDTO doesn't have one
+              id: reservation.idReservation, 
               idReservation: reservation.idReservation,
               status: "Confirmed",
               carBrand: carBrand,

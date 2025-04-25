@@ -108,7 +108,7 @@ const LoginForm = () => {
       // Store the token in localStorage
       const token = data.token || data.accessToken
       localStorage.setItem("token", token)
-
+localStorage.setItem("userId",data.id)
       // Store email for reference
       localStorage.setItem("userEmail", email)
 

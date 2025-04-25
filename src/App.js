@@ -7,6 +7,7 @@ import SignupPage from "./components/SignupPage"
 import Dashboard from "./pages/Dashboard"
 import AuthTest from "./pages/AuthTest"
 import BookingConfirmed from "./pages/BookingConfirmed"
+import ClientBookingsPage from "./pages/ClientBookingsPage" // Add this import
 import { AuthProvider } from "./contexts/AuthContext"
 import PrivateRoute from "./components/PrivateRoute"
 
@@ -17,7 +18,7 @@ import "./App.css"
 function RoutesWithKey() {
   const location = useLocation()
   return (
-    <Routes key={location.pathname}>
+    <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/car-selection" element={<CarSelection />} />
       <Route path="/car-details/:carId" element={<CarDetailsPage />} />
@@ -30,6 +31,23 @@ function RoutesWithKey() {
         element={
           <PrivateRoute adminOnly={true}>
             <Dashboard />
+          </PrivateRoute>
+        }
+      />
+      {/* Use /bookings route to match what's in the Header component */}
+      <Route
+        path="/bookings"
+        element={
+          <PrivateRoute adminOnly={false}>
+            <ClientBookingsPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/booking-details/:id"
+        element={
+          <PrivateRoute adminOnly={false}>
+            <ClientBookingsPage />
           </PrivateRoute>
         }
       />

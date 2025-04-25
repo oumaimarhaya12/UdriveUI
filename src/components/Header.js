@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
-import { LogOut, ChevronDown, LayoutDashboard } from "lucide-react"
+import { LogOut, ChevronDown, LayoutDashboard, CalendarCheck } from "lucide-react"
 import "../styles/Header.css"
 import UdriveLogo from "../assets/UdriveLogo.png"
 
@@ -118,6 +118,11 @@ const Header = () => {
     setIsOpen(false)
   }
 
+  const handleBookingsClick = () => {
+    navigate("/bookings")
+    setIsOpen(false)
+  }
+
   return (
     <header className="udrive-header">
       <div className="udrive-logo" onClick={() => navigate("/")}>
@@ -156,6 +161,11 @@ const Header = () => {
                   </div>
                 </div>
 
+                <button className="menu-item" onClick={handleBookingsClick}>
+                  <CalendarCheck size={20} className="menu-icon" />
+                  <span>My Bookings</span>
+                </button>
+
                 {user.role === "ADMIN" && (
                   <button className="menu-item dashboard" onClick={handleDashboardClick}>
                     <LayoutDashboard size={20} className="menu-icon" />
@@ -186,4 +196,3 @@ const Header = () => {
 }
 
 export default Header
-

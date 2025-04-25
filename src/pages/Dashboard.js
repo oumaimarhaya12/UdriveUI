@@ -12,7 +12,7 @@ import ThemeToggle from "../components/ThemeToggle"
 import "../styles/dashboard.css"
 
 // Import the API directly
-const API_BASE_URL = "http://localhost:8084"
+const API_BASE_URL = "https://localhost:8084"
 
 // Helper function to handle API requests with proper error handling
 const apiRequest = async (url, options = {}) => {
