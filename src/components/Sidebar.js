@@ -2,7 +2,7 @@
 
 import { useEffect } from "react"
 import { Link, useLocation } from "react-router-dom"
-import { LayoutGrid, Car, Calendar, Settings, LogOut, ChevronLeft, ChevronRight } from "lucide-react"
+import { LayoutGrid, Car, Calendar, Settings, LogOut, ChevronLeft, ChevronRight, Users } from "lucide-react"
 import "../styles/Sidebar.css"
 
 const Sidebar = ({ activeSection, setActiveSection, handleSignOut, collapsed, darkMode, toggleSidebar }) => {
@@ -15,6 +15,8 @@ const Sidebar = ({ activeSection, setActiveSection, handleSignOut, collapsed, da
       setActiveSection("dashboard")
     } else if (path === "cars") {
       setActiveSection("cars")
+    } else if (path === "clients") {
+      setActiveSection("clients")
     } else if (path === "reservations") {
       setActiveSection("reservations")
     } else if (path === "settings") {
@@ -27,9 +29,6 @@ const Sidebar = ({ activeSection, setActiveSection, handleSignOut, collapsed, da
       setActiveSection("analytics")
     }
   }, [location, setActiveSection])
-
-  // Remove the description text under tab names, remove the "MAIN" section title,
-  // remove extra navigation items, and remove the admin profile picture
 
   // First, update the navItems array to keep only the essential items
   const navItems = [
@@ -44,6 +43,12 @@ const Sidebar = ({ activeSection, setActiveSection, handleSignOut, collapsed, da
       label: "Cars",
       icon: <Car size={20} />,
       path: "/dashboard/cars",
+    },
+    {
+      id: "clients",
+      label: "Clients",
+      icon: <Users size={20} />,
+      path: "/dashboard/clients",
     },
     {
       id: "reservations",
@@ -67,38 +72,6 @@ const Sidebar = ({ activeSection, setActiveSection, handleSignOut, collapsed, da
         </button>
       </div>
 
-      {/* Next, modify the sidebar-content section to remove the "MAIN" title */}
-      {/* Replace this: */}
-      {/* <div className="sidebar-content">
-        <div className="nav-section">
-          <div className="nav-section-title">{!collapsed && "MAIN"}</div>
-          <nav className="sidebar-nav">
-            <ul>
-              {navItems.map((item) => (
-                <li key={item.id}>
-                  <Link
-                    to={item.path}
-                    className={`nav-item ${activeSection === item.id ? "active" : ""}`}
-                    onClick={() => setActiveSection(item.id)}
-                    title={collapsed ? item.label : ""}
-                  >
-                    <div className="nav-icon-wrapper">
-                      <span className="nav-icon">{item.icon}</span>
-                    </div>
-                    <div className="nav-content">
-                      <span className="nav-label">{item.label}</span>
-                      {!collapsed && item.description && <span className="nav-description">{item.description}</span>}
-                    </div>
-                    {item.badge && <span className="nav-badge">{item.badge}</span>}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-      </div> */}
-
-      {/* With this simplified version: */}
       <div className="sidebar-content">
         <nav className="sidebar-nav">
           <ul>
@@ -121,27 +94,6 @@ const Sidebar = ({ activeSection, setActiveSection, handleSignOut, collapsed, da
         </nav>
       </div>
 
-      {/* Finally, modify the sidebar-footer to remove the user profile picture */}
-      {/* Replace this: */}
-      {/* <div className="sidebar-footer">
-        <div className="user-profile">
-          {!collapsed ? (
-            <div className="user-avatar large">
-              <span>A</span>
-            </div>
-          ) : (
-            <div className="user-avatar small">
-              <span>A</span>
-            </div>
-          )}
-        </div>
-        <button className="logout-btn" onClick={handleSignOut} title={collapsed ? "Logout" : ""}>
-          <LogOut size={20} />
-          <span className="nav-label">Logout</span>
-        </button>
-      </div> */}
-
-      {/* With this simplified version: */}
       <div className="sidebar-footer">
         <button className="logout-btn" onClick={handleSignOut} title={collapsed ? "Logout" : ""}>
           <LogOut size={20} className="logout-icon" />

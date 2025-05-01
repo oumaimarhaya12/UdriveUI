@@ -6,6 +6,7 @@ import { useAuth } from "../contexts/AuthContext"
 import Sidebar from "../components/Sidebar"
 import DashboardStats from "../components/DashboardStats"
 import CarsManagement from "../components/cars/CarsManagement"
+import ClientsManagement from "../components/ClientsManagement"
 import ReservationsSection from "../components/ReservationsSection"
 import SettingsSection from "../components/SettingsSection"
 import ThemeToggle from "../components/ThemeToggle"
@@ -361,6 +362,7 @@ export default function Dashboard() {
                 }
               />
               <Route path="cars" element={<CarsManagement darkMode={darkMode} />} />
+              <Route path="clients" element={<ClientsManagement darkMode={darkMode} />} />
               <Route
                 path="reservations"
                 element={
